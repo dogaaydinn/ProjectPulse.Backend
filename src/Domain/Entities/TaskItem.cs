@@ -1,4 +1,5 @@
 using Domain.Enums;
+using Domain.ValueObjects;
 using Shared.Base;
 
 namespace Domain.Entities;
@@ -8,8 +9,7 @@ public class TaskItem : BaseAuditableEntity
     public string Title { get; private set; } = string.Empty;
     public string? Description { get; private set; }
     public DateTime CreatedDate { get; private set; }
-    public DateTime? StartDate { get; private set; }
-    public DateTime? DueDate { get; private set; }
+    public DateRange? Schedule { get; private set; }
     public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
     public TaskType Type { get; private set; } = TaskType.Task;
 
@@ -48,4 +48,11 @@ public class TaskItem : BaseAuditableEntity
         AssigneeId = assigneeId;
         ReporterId = reporterId;
     }
+    public void SetSchedule(DateTime? start, DateTime? end)
+    {
+        Schedule = (start != null && end != null)
+            ? DateRange.Create(start.Value, end.Value)
+            : null;
+    }
+
 }
