@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Entities\" />
     <Folder Include="Enums\" />
     <Folder Include="Interfaces\" />
     <Folder Include="ValueObjects\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
