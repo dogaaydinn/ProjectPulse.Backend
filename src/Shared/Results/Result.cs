@@ -1,13 +1,17 @@
 namespace Shared.Results;
 
-public class Result<T>
+public class Result : IResult
 {
-    public bool IsSuccess { get; private set; }
-    public string? ErrorMessage { get; private set; }
-    public T? Value { get; private set; }
+    public bool IsSuccess { get; }
+    public List<Error> Errors { get; }
 
-    private Result() { }
+    protected Result(bool isSuccess, List<Error>? errors = null)
+    {
+        IsSuccess = isSuccess;
+        Errors = errors ?? new();
+    }
 
-    public static Result<T> Success(T value) => new() { IsSuccess = true, Value = value };
-    public static Result<T> Failure(string errorMessage) => new() { IsSuccess = false, ErrorMessage = errorMessage };
+    public static Result Success() => new(true);
+    public static Result Failure(Error error) => new(false, new List<Error> { error });
+    public static Result Failure(List<Error> errors) => new(false, errors);
 }
