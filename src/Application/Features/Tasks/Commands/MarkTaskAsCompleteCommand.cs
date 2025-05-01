@@ -1,4 +1,3 @@
-using ProjectPulse.Shared.Results;
-using Shared.Results;
+namespace Application.Features.Tasks.Commands;
 
-public record MarkTaskAsCompleteCommand(Guid TaskId) : IRequest<Result>;
+public record MarkTaskAsCompleteCommand(Guid TaskId);
