@@ -1,6 +1,6 @@
 namespace Shared.Base;
 
-public class BaseEntity
+public abstract class BaseEntity : IEntity
 {
-    
+    public Guid Id { get; protected set; } = Guid.NewGuid();
 }
