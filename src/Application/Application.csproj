@@ -9,6 +9,12 @@
     <PackageReference Include="AutoMapper" Version="14.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Behaviors\" />
+    <Folder Include="Features\Project\Commands\" />
+    <Folder Include="Features\Project\Queries\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
