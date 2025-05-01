@@ -4,7 +4,7 @@ public class Result<T> : Result
 {
     public T? Value { get; }
 
-    private Result(T? value, bool isSuccess, List<Error>? errors = null)
+    protected Result(T? value, bool isSuccess, List<Error>? errors = null)
         : base(isSuccess, errors)
     {
         Value = value;
