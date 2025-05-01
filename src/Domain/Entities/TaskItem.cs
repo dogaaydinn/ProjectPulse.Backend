@@ -1,4 +1,4 @@
-using System.Net.Mail;
+using Domain.Enums;
 using Shared.Base;
 
 namespace Domain.Entities;
@@ -10,8 +10,8 @@ public class TaskItem : BaseAuditableEntity
     public DateTime CreatedDate { get; private set; }
     public DateTime? StartDate { get; private set; }
     public DateTime? DueDate { get; private set; }
-    public string Priority { get; private set; } = "Medium";
-    public string Type { get; private set; } = "Task";
+    public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
+    public TaskType Type { get; private set; } = TaskType.Task;
 
     // FK
     public Guid ProjectId { get; private set; }
@@ -36,7 +36,9 @@ public class TaskItem : BaseAuditableEntity
     public ICollection<TaskDependency> Predecessors { get; private set; } = new List<TaskDependency>();
     public ICollection<TaskDependency> Successors { get; private set; } = new List<TaskDependency>();
 
-    private TaskItem() { }
+    private TaskItem()
+    {
+    }
 
     public TaskItem(string title, Guid projectId, Guid? assigneeId, Guid? reporterId)
     {
@@ -46,3 +48,4 @@ public class TaskItem : BaseAuditableEntity
         AssigneeId = assigneeId;
         ReporterId = reporterId;
     }
+}

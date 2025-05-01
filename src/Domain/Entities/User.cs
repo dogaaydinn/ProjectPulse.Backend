@@ -1,3 +1,4 @@
+using Domain.Enums;
 using Shared.Base;
 
 namespace Domain.Entities;
@@ -7,7 +8,7 @@ public class User : BaseAuditableEntity
     public string Username { get; private set; } = string.Empty;
     public string Email { get; private set; } = string.Empty;
     public string PasswordHash { get; private set; } = string.Empty;
-    public string GlobalRole { get; private set; } = "User";
+    public GlobalRole GlobalRole { get; private set; } = GlobalRole.User;
 
     // Navigation Properties
 
@@ -20,13 +21,15 @@ public class User : BaseAuditableEntity
     public ICollection<TaskAssignment> TaskAssignments { get; private set; } = new List<TaskAssignment>();
     public ICollection<UserTeam> UserTeams { get; private set; } = new List<UserTeam>();
 
-    private User() { }
+    private User()
+    {
+    }
 
     public User(string username, string email, string passwordHash, string globalRole = "User")
     {
         Username = username;
         Email = email;
         PasswordHash = passwordHash;
-        GlobalRole = globalRole;
+        GlobalRole = Enum.TryParse<GlobalRole>(globalRole, true, out var role) ? role : GlobalRole.User;
     }
 }

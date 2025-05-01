@@ -1,3 +1,5 @@
+using Domain.Enums;
+
 namespace Domain.Entities;
 
 public class TaskDependency
@@ -8,11 +10,10 @@ public class TaskDependency
     public Guid DependsOnTaskId { get; private set; }
     public TaskItem DependsOnTask { get; private set; } = null!;
 
-    public string DependencyType { get; private set; } = "FinishToStart"; // Enum olabilir
-
+    public DependencyType DependencyType { get; private set; } = DependencyType.FinishToStart;
     private TaskDependency() { }
 
-    public TaskDependency(Guid taskItemId, Guid dependsOnTaskId, string dependencyType = "FinishToStart")
+    public TaskDependency(Guid taskItemId, Guid dependsOnTaskId, DependencyType dependencyType = DependencyType.FinishToStart)
     {
         if (taskItemId == dependsOnTaskId)
             throw new ArgumentException("A task cannot depend on itself.");
@@ -22,7 +23,7 @@ public class TaskDependency
         DependencyType = dependencyType;
     }
 
-    public void UpdateDependencyType(string type)
+    public void UpdateDependencyType(DependencyType type)
     {
         DependencyType = type;
     }
