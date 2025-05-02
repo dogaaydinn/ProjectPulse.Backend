@@ -2,9 +2,9 @@ using Shared.Constants;
 
 namespace Application.Features.Projects.Queries.GetById;
 
-public class GetByIdValidator :AbstractValidator<GetProjectByIdQuery>
+public class GetProjectByIdValidator :AbstractValidator<GetProjectByIdQuery>
 {
-    public GetByIdValidator()
+    public GetProjectByIdValidator()
     {
         RuleFor(x => x.Id)
             .NotEmpty().WithMessage(ValidationMessages.ProjectIdRequired);

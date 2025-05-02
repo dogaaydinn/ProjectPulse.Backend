@@ -3,11 +3,11 @@ using Shared.Results;
 
 namespace Application.Features.Projects.Queries.GetById;
 
-public class GetByIdQueryHandler
+public class GetProjectByIdQueryHandler
 {
     private readonly IProjectRepository _projectRepository;
 
-    public GetByIdQueryHandler(IProjectRepository projectRepository)
+    public GetProjectByIdQueryHandler(IProjectRepository projectRepository)
     {
         _projectRepository = projectRepository;
     }
