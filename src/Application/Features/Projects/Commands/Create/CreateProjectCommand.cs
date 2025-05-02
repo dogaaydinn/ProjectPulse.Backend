@@ -1,4 +1,4 @@
-namespace Application.Features.Project.Commands;
+namespace Application.Features.Projects.Commands.Create;
 
 public record CreateProjectCommand(
     string Name,

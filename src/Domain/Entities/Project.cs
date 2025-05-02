@@ -46,7 +46,7 @@ public class Project : BaseAuditableEntity
     public void SetSchedule(DateTime start, DateTime? end)
     {
         if (end.HasValue && end < start)
-            throw new AppException("Validation.Project.Schedule", "End date cannot be earlier than start date.");
+            throw new AppException("Validation.Projects.Schedule", "End date cannot be earlier than start date.");
 
         StartDate = start;
         EndDate = end;
@@ -55,14 +55,14 @@ public class Project : BaseAuditableEntity
     private void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new AppException("Validation.Project.Name", "Project name is required.");
+            throw new AppException("Validation.Projects.Name", "Projects name is required.");
         Name = name;
     }
 
     public void AssignManager(Guid managerId)
     {
         if (managerId == Guid.Empty)
-            throw new AppException("Validation.Project.Manager", "Manager ID cannot be empty.");
+            throw new AppException("Validation.Projects.Manager", "Manager ID cannot be empty.");
         ManagerId = managerId;
     }
 }

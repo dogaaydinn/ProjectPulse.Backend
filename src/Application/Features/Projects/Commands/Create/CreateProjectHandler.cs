@@ -1,7 +1,7 @@
 using Domain.Factories;
 using Shared.Results;
 
-namespace Application.Features.Project.Commands;
+namespace Application.Features.Projects.Commands.Create;
 
 public class CreateProjectCommandHandler
 {
