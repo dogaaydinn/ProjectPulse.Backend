@@ -1,32 +1,51 @@
+using Domain.Enums;
 using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
 public class Status : BaseEntity
 {
     public string Name { get; private set; } = string.Empty;
-    public string Color { get; private set; } = "#000000";
-    public bool IsClosed { get; private set; }
+    public StatusType Type { get; private set; } = StatusType.NotStarted;
+    public string? Color { get; private set; }
+    public int Order { get; private set; }
 
-    public Guid ProjectId { get; private set; }
-    public Project Project { get; private set; } = null!;
+    public Guid WorkflowId { get; private set; }
+    public Workflow Workflow { get; private set; } = null!;
 
     public ICollection<TaskItem> Tasks { get; private set; } = new List<TaskItem>();
 
-    private Status() { }
+    protected Status() { }
 
-    public Status(string name, string color, bool isClosed, Guid projectId)
+    public Status(string name, StatusType type, int order, Guid workflowId, string? color = null)
     {
-        Name = name;
+        SetName(name);
+        Type = type;
+        Order = order;
+        WorkflowId = workflowId;
         Color = color;
-        IsClosed = isClosed;
-        ProjectId = projectId;
     }
 
-    public void Update(string name, string color, bool isClosed)
+    public void SetName(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new AppException("Validation.Status.Name", "Status name cannot be empty.");
         Name = name;
+    }
+
+    public void SetColor(string? color)
+    {
         Color = color;
-        IsClosed = isClosed;
+    }
+
+    public void ChangeType(StatusType type)
+    {
+        Type = type;
+    }
+
+    public void Reorder(int newOrder)
+    {
+        Order = newOrder;
     }
 }

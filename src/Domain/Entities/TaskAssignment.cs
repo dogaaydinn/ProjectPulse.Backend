@@ -1,8 +1,10 @@
 using Domain.Enums;
+using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
-public class TaskAssignment
+public class TaskAssignment : BaseEntity
 {
     public Guid TaskItemId { get; private set; }
     public TaskItem TaskItem { get; private set; } = null!;
@@ -10,16 +12,27 @@ public class TaskAssignment
     public Guid UserId { get; private set; }
     public User User { get; private set; } = null!;
 
-    public TaskRole Role { get; private set; } = TaskRole.Developer;
+    public TaskRole Role { get; private set; }
     public DateTime AssignedAt { get; private set; }
 
-    private TaskAssignment() { }
+    protected TaskAssignment() { }
 
-    public TaskAssignment(Guid taskItemId, Guid userId, TaskRole role)
+    internal TaskAssignment(Guid taskItemId, Guid userId, TaskRole role)
     {
+        if (taskItemId == Guid.Empty || userId == Guid.Empty)
+            throw new AppException("Validation.TaskAssignment", "Task or User ID cannot be empty.");
+
         TaskItemId = taskItemId;
         UserId = userId;
         Role = role;
         AssignedAt = DateTime.UtcNow;
+    }
+
+    public void UpdateRole(TaskRole newRole)
+    {
+        if (Role == newRole)
+            return;
+
+        Role = newRole;
     }
 }

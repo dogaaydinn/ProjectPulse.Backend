@@ -1,4 +1,5 @@
 using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
@@ -13,18 +14,21 @@ public class Comment : BaseEntity
     public Guid AuthorId { get; private set; }
     public User Author { get; private set; } = null!;
 
-    private Comment() { }
+    protected Comment() { }
 
-    public Comment(string content, Guid taskItemId, Guid authorId)
+    internal Comment(string content, Guid taskItemId, Guid authorId)
     {
-        Content = content;
+        SetContent(content);
         TaskItemId = taskItemId;
         AuthorId = authorId;
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void Update(string content)
+    private void SetContent(string content)
     {
-        Content = content;
+        if (string.IsNullOrWhiteSpace(content))
+            throw new AppException("Validation.Comment.Content", "Comment cannot be empty.");
+
+        Content = content.Trim();
     }
 }

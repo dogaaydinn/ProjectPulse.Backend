@@ -1,29 +1,38 @@
 using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
 public class Label : BaseEntity
 {
     public string Name { get; private set; } = string.Empty;
-    public string Color { get; private set; } = "#000000";
-
-    public Guid ProjectId { get; private set; }
-    public Project Project { get; private set; } = null!;
+    public string? Color { get; private set; }
 
     public ICollection<TaskLabel> TaskLabels { get; private set; } = new List<TaskLabel>();
 
-    private Label() { }
+    protected Label() { }
 
-    public Label(string name, string color, Guid projectId)
+    public Label(string name, string? color = null)
     {
-        Name = name;
+        SetName(name);
         Color = color;
-        ProjectId = projectId;
     }
 
-    public void Update(string name, string color)
+    private void SetName(string name)
     {
-        Name = name;
+        if (string.IsNullOrWhiteSpace(name))
+            throw new AppException("Validation.Label.Name", "Label name cannot be empty.");
+
+        Name = name.Trim();
+    }
+
+    public void ChangeColor(string? color)
+    {
         Color = color;
+    }
+
+    public void Rename(string newName)
+    {
+        SetName(newName);
     }
 }

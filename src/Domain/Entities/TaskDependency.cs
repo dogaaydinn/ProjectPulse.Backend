@@ -1,8 +1,10 @@
 using Domain.Enums;
+using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
-public class TaskDependency
+public class TaskDependency : BaseEntity
 {
     public Guid TaskItemId { get; private set; }
     public TaskItem TaskItem { get; private set; } = null!;
@@ -11,20 +13,26 @@ public class TaskDependency
     public TaskItem DependsOnTask { get; private set; } = null!;
 
     public DependencyType DependencyType { get; private set; } = DependencyType.FinishToStart;
-    private TaskDependency() { }
 
-    public TaskDependency(Guid taskItemId, Guid dependsOnTaskId, DependencyType dependencyType = DependencyType.FinishToStart)
+    protected TaskDependency() { }
+
+    internal TaskDependency(Guid taskItemId, Guid dependsOnTaskId, DependencyType dependencyType)
     {
-        if (taskItemId == dependsOnTaskId)
-            throw new ArgumentException("A task cannot depend on itself.");
-
-        TaskItemId = taskItemId;
-        DependsOnTaskId = dependsOnTaskId;
+        SetDependency(taskItemId, dependsOnTaskId);
         DependencyType = dependencyType;
     }
 
-    public void UpdateDependencyType(DependencyType type)
+    private void SetDependency(Guid taskId, Guid dependsOnId)
     {
-        DependencyType = type;
+        if (taskId == dependsOnId)
+            throw new AppException("TaskDependency.SelfDependency", "A task cannot depend on itself.");
+
+        TaskItemId = taskId;
+        DependsOnTaskId = dependsOnId;
+    }
+
+    public void UpdateDependencyType(DependencyType newType)
+    {
+        DependencyType = newType;
     }
 }

@@ -1,48 +1,43 @@
 using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
 public class TimeLog : BaseEntity
 {
-    public Guid UserId { get; private set; }
-    public User User { get; private set; } = null!;
-
     public Guid TaskItemId { get; private set; }
     public TaskItem TaskItem { get; private set; } = null!;
 
+    public Guid UserId { get; private set; }
+    public User User { get; private set; } = null!;
+
     public DateTime StartTime { get; private set; }
     public DateTime EndTime { get; private set; }
+
     public TimeSpan Duration => EndTime - StartTime;
 
-    public string? Description { get; private set; }
-    public DateTime LoggedAt { get; private set; }
+    protected TimeLog() { }
 
-    private TimeLog() { }
-
-    public TimeLog(Guid userId, Guid taskItemId, DateTime startTime, DateTime endTime, string? description)
+    internal TimeLog(Guid taskItemId, Guid userId, DateTime startTime, DateTime endTime)
     {
-        if (endTime <= startTime)
-            throw new ArgumentException("EndTime must be after StartTime");
+        if (taskItemId == Guid.Empty || userId == Guid.Empty)
+            throw new AppException("Validation.TimeLog.InvalidIds", "Task and User IDs must be valid.");
 
-        UserId = userId;
+        if (startTime >= endTime)
+            throw new AppException("Validation.TimeLog.InvalidTimes", "Start time must be before end time.");
+
         TaskItemId = taskItemId;
+        UserId = userId;
         StartTime = startTime;
         EndTime = endTime;
-        Description = description;
-        LoggedAt = DateTime.UtcNow;
     }
 
-    public void UpdateTimes(DateTime start, DateTime end)
+    public void UpdateTime(DateTime newStart, DateTime newEnd)
     {
-        if (end <= start)
-            throw new ArgumentException("EndTime must be after StartTime");
+        if (newStart >= newEnd)
+            throw new AppException("Validation.TimeLog.InvalidTimes", "Start time must be before end time.");
 
-        StartTime = start;
-        EndTime = end;
-    }
-
-    public void UpdateDescription(string? description)
-    {
-        Description = description;
+        StartTime = newStart;
+        EndTime = newEnd;
     }
 }

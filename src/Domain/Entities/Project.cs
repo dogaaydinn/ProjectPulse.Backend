@@ -1,5 +1,6 @@
 using Domain.Enums;
 using Shared.Base;
+using Shared.Exceptions;
 
 namespace Domain.Entities;
 
@@ -25,7 +26,7 @@ public class Project : BaseAuditableEntity
 
     protected Project() { }
 
-    internal Project(string name, string? description, DateTime startDate, DateTime? endDate, Guid managerId)
+    public Project(string name, string? description, DateTime startDate, DateTime? endDate, Guid managerId)
     {
         SetName(name);
         Description = description;
