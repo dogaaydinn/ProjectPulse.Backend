@@ -16,7 +16,7 @@ public class TeamProject : BaseEntity
     internal TeamProject(Guid teamId, Guid projectId)
     {
         if (teamId == Guid.Empty || projectId == Guid.Empty)
-            throw new AppException("Validation.TeamProject.InvalidIds", "Team and Project IDs must be valid.");
+            throw new AppException("Validation.TeamProject.InvalidIds", "Team and Projects IDs must be valid.");
 
         TeamId = teamId;
         ProjectId = projectId;

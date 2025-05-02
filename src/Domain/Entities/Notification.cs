@@ -12,7 +12,7 @@ public class Notification : BaseEntity
     public DateTime CreatedAt { get; private set; }
     public bool IsRead { get; private set; }
 
-    public string? SourceType { get; private set; }  // Optional: "Task", "Project", etc.
+    public string? SourceType { get; private set; }  // Optional: "Task", "Projects", etc.
     public Guid? SourceId { get; private set; }
 
     protected Notification() { }
