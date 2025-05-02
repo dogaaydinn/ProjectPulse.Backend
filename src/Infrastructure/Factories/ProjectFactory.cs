@@ -1,12 +1,19 @@
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Factories;
 
 namespace Infrastructure.Factories;
 
 public class ProjectFactory : IProjectFactory
 {
-    public Project Create(string name, string? description, DateTime startDate, DateTime? endDate, Guid managerId)
+    public Project Create(
+        string name,
+        string? description,
+        DateTime startDate,
+        DateTime? endDate,
+        Guid managerId)
     {
-        return new Project(name, description, startDate, endDate, managerId);
+        var project = new Project(name, description, startDate, endDate, managerId);
+        return project;
     }
 }

@@ -3,13 +3,13 @@ using Shared.Results;
 
 namespace Application.Features.Project.Commands;
 
-public class CreateProjectHandler
+public class CreateProjectCommandHandler
 {
     private readonly IProjectFactory _projectFactory;
     private readonly IProjectRepository _projectRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateProjectHandler(
+    public CreateProjectCommandHandler(
         IProjectFactory projectFactory,
         IProjectRepository projectRepository,
         IUnitOfWork unitOfWork)
@@ -26,8 +26,7 @@ public class CreateProjectHandler
             command.Description,
             command.StartDate,
             command.EndDate,
-            command.ManagerId
-        );
+            command.ManagerId);
 
         await _projectRepository.AddAsync(project);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
