@@ -14,7 +14,7 @@ public class Comment : BaseEntity
     public Guid AuthorId { get; private set; }
     public User Author { get; private set; } = null!;
 
-    protected Comment() { }
+    public Comment() { }
 
     internal Comment(string content, Guid taskItemId, Guid authorId)
     {
