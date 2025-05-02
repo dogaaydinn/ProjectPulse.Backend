@@ -2,8 +2,15 @@ namespace Domain.Enums;
 
 public enum TaskRole
 {
-    Developer = 1,
-    Reviewer = 2,
-    Tester = 3,
-    Observer = 4
+    Developer,
+    Reviewer,
+    Tester,
+    Observer,
+    Manager,
+    Stakeholder,
+    Administrator,
+    Client,
+    Guest,
+    Owner,
+    Contributor
 }

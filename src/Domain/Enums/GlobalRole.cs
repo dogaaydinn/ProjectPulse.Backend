@@ -2,7 +2,9 @@ namespace Domain.Enums;
 
 public enum GlobalRole
 {
-    User = 1,
-    Admin = 2,
-    SuperAdmin = 3
+    Member,
+    User,
+    Admin,
+    Guest,
+    ProjectManager
 }

@@ -1,31 +1,40 @@
+using Shared.Exceptions;
+
 namespace Domain.ValueObjects;
 
-public sealed class DateRange
+public class DateRange
 {
     public DateTime Start { get; }
     public DateTime End { get; }
 
+    protected DateRange() { }
+
     private DateRange(DateTime start, DateTime end)
     {
-        if (end < start)
-            throw new ArgumentException("End date must be after start date.");
-
         Start = start;
         End = end;
     }
 
-    public static DateRange Create(DateTime start, DateTime end) => new(start, end);
+    public static DateRange Create(DateTime start, DateTime end)
+    {
+        if (end < start)
+            throw new AppException("Validation.DateRange.Invalid", "End date cannot be earlier than start date.");
+
+        return new DateRange(start, end);
+    }
 
     public bool Overlaps(DateRange other)
-    {
-        return Start <= other.End && End >= other.Start;
-    }
+        => Start < other.End && End > other.Start;
+
+    public bool Contains(DateTime date)
+        => Start <= date && date <= End;
+
+    public override string ToString()
+        => $"{Start:yyyy-MM-dd} - {End:yyyy-MM-dd}";
 
     public override bool Equals(object? obj)
-    {
-        if (obj is not DateRange other) return false;
-        return Start == other.Start && End == other.End;
-    }
+        => obj is DateRange range && Start == range.Start && End == range.End;
 
-    public override int GetHashCode() => HashCode.Combine(Start, End);
+    public override int GetHashCode()
+        => HashCode.Combine(Start, End);
 }
