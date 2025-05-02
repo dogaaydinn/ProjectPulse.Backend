@@ -1,6 +1,3 @@
 namespace Application.Features.Projects.Queries.GetAll;
 
-public record GetAllQuery
-{
-    
-}
+public record GetAllProjectsQuery;

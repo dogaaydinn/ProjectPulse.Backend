@@ -1,7 +1,7 @@
 using Domain.Factories;
 using Shared.Results;
 
-namespace Application.Features.Tasks.Commands;
+namespace Application.Features.Tasks.Commands.Create;
 
 public class CreateTaskCommandHandler
 {
@@ -9,7 +9,10 @@ public class CreateTaskCommandHandler
     private readonly ITaskRepository _taskRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateTaskCommandHandler(ITaskFactory taskFactory, ITaskRepository taskRepository, IUnitOfWork unitOfWork)
+    public CreateTaskCommandHandler(
+        ITaskFactory taskFactory,
+        ITaskRepository taskRepository,
+        IUnitOfWork unitOfWork)
     {
         _taskFactory = taskFactory;
         _taskRepository = taskRepository;
@@ -25,9 +28,10 @@ public class CreateTaskCommandHandler
             command.Type,
             command.ProjectId,
             command.AssigneeId,
-            command.ReporterId,
-            command.StartDate,
-            command.EndDate);
+            command.ReporterId
+        );
+
+        task.SetSchedule(command.StartDate, command.EndDate);
 
         await _taskRepository.AddAsync(task);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,13 +1,13 @@
 using Shared.Constants;
 
-namespace Application.Features.Projects.Commands.Create;
+namespace Application.Features.Tasks.Commands.Create;
 
-public class CreateCommandValidator : AbstractValidator<CreateCommand>
+public class CreateTaskValidator : AbstractValidator<CreateTaskCommand>
 {
-    public CreateCommandValidator()
+    public CreateTaskValidator()
     {
         RuleFor(x => x.Title)
-            .NotEmpty().WithMessage(ValidationMessages.ProjectTitleRequired)
+            .NotEmpty().WithMessage(ValidationMessages.TaskTitleRequired)
             .MaximumLength(100);
 
         RuleFor(x => x.ProjectId)
