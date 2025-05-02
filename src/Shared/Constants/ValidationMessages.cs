@@ -8,6 +8,8 @@ public static class ValidationMessages
     public const string TaskTitleRequired = "Task title is required.";
     public const string ProjectIdRequired = "Projects ID is required.";
     public const string StartDateMustBeBeforeEndDate = "Start date must be before end date.";
+    public const string ProjectTitleRequired = "Project title is required.";
+    public const string StartDateMustBeBeforeOrEqualToEndDate = "Start date must be before or equal to end date.";
 
     
 }
