@@ -1,5 +1,4 @@
 using Domain.Entities;
-using Domain.Enums;
 using Domain.Factories;
 
 namespace Infrastructure.Factories;

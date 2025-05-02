@@ -1,21 +1,23 @@
-
+using Application.Common.Validation;
 using Shared.Constants;
 
 namespace Application.Features.Projects.Commands.Create;
 
-public class CreateProjectValidator : AbstractValidator<CreateProjectCommand>
+public class CreateProjectValidator : IValidator<CreateProjectCommand>
 {
-    public CreateProjectValidator()
+    public ValidationResult Validate(CreateProjectCommand request)
     {
-        RuleFor(x => x.Name)
-            .NotEmpty().WithMessage(ValidationMessages.ProjectIdRequired)
-            .MaximumLength(100);
+        var result = new ValidationResult();
 
-        RuleFor(x => x.StartDate)
-            .LessThanOrEqualTo(x => x.EndDate ?? DateTime.MaxValue)
-            .WithMessage(ValidationMessages.StartDateMustBeBeforeOrEqualToEndDate);
+        if (string.IsNullOrWhiteSpace(request.Name))
+            result.AddError(ValidationMessages.ProjectNameRequired);
 
-        RuleFor(x => x.ManagerId)
-            .NotEmpty().WithMessage(ValidationMessages.ManagerIdRequired);
+        if (request.StartDate > (request.EndDate ?? DateTime.MaxValue))
+            result.AddError(ValidationMessages.StartDateMustBeBeforeEndDate);
+
+        if (request.ManagerId == Guid.Empty)
+            result.AddError(ValidationMessages.ManagerIdRequired);
+
+        return result;
     }
 }

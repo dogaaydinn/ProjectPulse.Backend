@@ -1,20 +1,26 @@
+using Application.Common.Validation;
 using Shared.Constants;
 
 namespace Application.Features.Tasks.Commands.Create;
 
-public class CreateTaskValidator : AbstractValidator<CreateTaskCommand>
+public class CreateTaskValidator : IValidator<CreateTaskCommand>
 {
-    public CreateTaskValidator()
+    public ValidationResult Validate(CreateTaskCommand request)
     {
-        RuleFor(x => x.Title)
-            .NotEmpty().WithMessage(ValidationMessages.TaskTitleRequired)
-            .MaximumLength(100);
+        var result = new ValidationResult();
 
-        RuleFor(x => x.ProjectId)
-            .NotEmpty().WithMessage(ValidationMessages.ProjectIdRequired);
+        if (string.IsNullOrWhiteSpace(request.Title))
+            result.AddError(ValidationMessages.TaskTitleRequired);
 
-        RuleFor(x => x.StartDate)
-            .LessThanOrEqualTo(x => x.EndDate ?? DateTime.MaxValue)
-            .WithMessage(ValidationMessages.StartDateMustBeBeforeOrEqualToEndDate);
+        if (request.ProjectId == Guid.Empty)
+            result.AddError(ValidationMessages.ProjectIdRequired);
+
+        if (request.StartDate.HasValue && request.EndDate.HasValue &&
+            request.StartDate > request.EndDate)
+        {
+            result.AddError(ValidationMessages.StartDateMustBeBeforeEndDate);
+        }
+
+        return result;
     }
 }
