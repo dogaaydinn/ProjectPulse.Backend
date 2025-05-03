@@ -4,18 +4,11 @@ using Shared.Results;
 
 namespace Application.Features.Workflows.Queries;
 
-public class GetWorkflowByIdQueryHandler
+public class GetWorkflowByIdQueryHandler(IWorkflowRepository workflowRepository)
 {
-    private readonly IWorkflowRepository _workflowRepository;
-
-    public GetWorkflowByIdQueryHandler(IWorkflowRepository workflowRepository)
-    {
-        _workflowRepository = workflowRepository;
-    }
-
     public async Task<Result<WorkflowDto>> Handle(GetWorkflowByIdQuery query, CancellationToken cancellationToken)
     {
-        var workflow = await _workflowRepository.GetByIdAsync(query.Id);
+        var workflow = await workflowRepository.GetByIdAsync(query.Id);
 
         if (workflow is null)
             return Result<WorkflowDto>.Failure(Error.NotFound("Workflow", query.Id));

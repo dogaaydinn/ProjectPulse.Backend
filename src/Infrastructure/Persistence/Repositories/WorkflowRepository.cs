@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class WorkflowRepository : BaseRepository<Workflow>, IWorkflowRepository
+public class WorkflowRepository(AppDbContext context) : BaseRepository<Workflow>(context), IWorkflowRepository
 {
-    public WorkflowRepository(AppDbContext context) : base(context) { }
-
     public async Task<List<Workflow>> GetByProjectIdAsync(Guid projectId)
     {
-        return await _context.Workflows
+        return await Context.Workflows
             .Where(w => w.ProjectId == projectId)
             .ToListAsync();
     }

@@ -34,7 +34,7 @@ public class Workflow : BaseEntity
         IsActive = true;
     }
 
-    public void SetName(string name)
+    private void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new AppException("Validation.Workflow.Name", "Workflow name is required.");
