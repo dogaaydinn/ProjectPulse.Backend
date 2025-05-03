@@ -5,6 +5,9 @@ namespace Application.Interfaces;
 
 public interface IProjectService
 {
-    Task<Result<ProjectDto>> CreateProjectAsync(CreateProjectRequest request);
+    Task<Result<Guid>> CreateProjectAsync(CreateProjectRequest request);
+    Task<Result<ProjectDto>> GetProjectByIdAsync(Guid projectId);
     Task<Result<List<ProjectDto>>> GetAllProjectsAsync();
+    Task<Result<ProjectDto>> UpdateProjectAsync(UpdateProjectRequest request);
+    Task<Result> DeleteProjectAsync(Guid projectId);
 }
