@@ -1,5 +1,5 @@
 using Application.DTOs;
-using Application.Interfaces;
+using Domain.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Tasks.Queries.GetById;

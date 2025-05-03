@@ -1,6 +1,6 @@
 namespace Domain.Repositories;
 
-public interface IRepository<T> where T : class
+public interface IRepository<T>
 {
     Task<T?> GetByIdAsync(Guid id);
     Task<List<T>> GetAllAsync();

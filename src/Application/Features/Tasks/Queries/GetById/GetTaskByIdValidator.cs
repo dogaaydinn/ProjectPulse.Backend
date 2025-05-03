@@ -1,12 +1,19 @@
+using Application.Common.Validation;
 using Shared.Constants;
 
 namespace Application.Features.Tasks.Queries.GetById;
 
-public class GetTaskByIdValidator : AbstractValidator<GetTaskByIdQuery>
+public class GetTaskByIdValidator : IValidator<GetTaskByIdQuery>
 {
-    public GetTaskByIdValidator()
+    public ValidationResult Validate(GetTaskByIdQuery request)
     {
-        RuleFor(x => x.Id)
-            .NotEmpty().WithMessage(ValidationMessages.TaskIdRequired);
+        var result = new ValidationResult();
+        
+        if (request.Id == Guid.Empty)
+        {
+            result.AddError(ValidationMessages.TaskIdRequired);
+        }
+
+        return result;
     }
 }

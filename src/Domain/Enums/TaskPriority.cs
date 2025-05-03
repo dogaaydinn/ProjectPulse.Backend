@@ -5,5 +5,10 @@ public enum TaskPriority
     Low,
     Medium,
     High,
-    Urgent
+    Urgent,
+    Trivial,
+    Blocker,
+    Major,
+    Minor,
+    Critical
 }

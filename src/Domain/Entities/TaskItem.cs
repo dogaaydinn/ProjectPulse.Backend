@@ -12,7 +12,7 @@ public class TaskItem : BaseAuditableEntity
     public DateTime CreatedDate { get; private set; }
 
     public DateRange? Schedule { get; private set; }
-    public Priority Priority { get; private set; } = Priority.Medium;
+    public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
     public TaskType Type { get; private set; } = TaskType.Task;
 
     public Guid ProjectId { get; private set; }
@@ -38,10 +38,10 @@ public class TaskItem : BaseAuditableEntity
 
     protected TaskItem() { }
 
-    internal TaskItem(
+    public TaskItem(
         string title,
         string? description,
-        Priority priority,
+        TaskPriority priority,
         TaskType type,
         Guid projectId,
         Guid? assigneeId,
