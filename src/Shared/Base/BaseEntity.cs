@@ -1,4 +1,4 @@
-using Domain.Common;
+using Shared.Events;
 
 namespace Shared.Base;
 
