@@ -10,13 +10,13 @@ public class CreateCommentValidator : IValidator<CreateCommentCommand>
         var result = new ValidationResult();
 
         if (request.TaskId == Guid.Empty)
-            result.AddError(ValidationMessages.TaskIdRequired);
+            result.AddError("TaskId", ValidationMessages.TaskIdRequired);
 
         if (request.AuthorId == Guid.Empty)
-            result.AddError(ValidationMessages.AuthorIdRequired);
+            result.AddError("AuthorId", ValidationMessages.AuthorIdRequired);
 
         if (string.IsNullOrWhiteSpace(request.Content))
-            result.AddError(ValidationMessages.CommentContentRequired);
+            result.AddError("Content", ValidationMessages.CommentContentRequired);
 
         return result;
     }
