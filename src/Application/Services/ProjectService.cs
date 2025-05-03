@@ -6,23 +6,26 @@ namespace Application.Services;
 
 public class ProjectService : IProjectService
 {
-    private static readonly List<ProjectDto> _inMemoryProjects = [];
+    private static readonly List<ProjectDto> InMemoryProjects = [];
 
-    public async Task<Result<ProjectDto>> CreateProjectAsync(CreateProjectRequest request)
+    public Task<Result<ProjectDto>> CreateProjectAsync(CreateProjectRequest request)
     {
-        var project = new ProjectDto
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            Deadline = request.Deadline
-        };
+        var project = new ProjectDto(
+            Guid.NewGuid(),
+            request.Name,
+            request.Description,
+            request.StartDate,
+            request.EndDate,
+            request.ManagerId
+        );
 
-        _inMemoryProjects.Add(project);
-        return Result<ProjectDto>.Success(project);
+        InMemoryProjects.Add(project);
+        return Task.FromResult(Result<ProjectDto>.Success(project));
     }
 
     public async Task<Result<List<ProjectDto>>> GetAllProjectsAsync()
     {
-        return Result<List<ProjectDto>>.Success(_inMemoryProjects);
+        await Task.CompletedTask;
+        return Result<List<ProjectDto>>.Success(InMemoryProjects);
     }
 }

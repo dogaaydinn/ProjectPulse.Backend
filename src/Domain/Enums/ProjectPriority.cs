@@ -1,6 +1,6 @@
 namespace Domain.Enums;
 
-public enum Priority
+public enum ProjectPriority
 {
     Low,
     Normal,

@@ -1,12 +1,18 @@
+using Application.Common.Validation;
 using Shared.Constants;
 
 namespace Application.Features.Projects.Queries.GetById;
 
-public class GetProjectByIdValidator :AbstractValidator<GetProjectByIdQuery>
+public class GetProjectByIdValidator :IValidator<GetProjectByIdQuery>
 {
-    public GetProjectByIdValidator()
+    public ValidationResult Validate(GetProjectByIdQuery request)
     {
-        RuleFor(x => x.Id)
-            .NotEmpty().WithMessage(ValidationMessages.ProjectIdRequired);
+        var result = new ValidationResult();
+        
+        if (request.Id == Guid.Empty)
+        {
+            result.AddError(ValidationMessages.ProjectIdRequired);
+        }
+        return result;
     }
 }

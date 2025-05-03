@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Domain.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Projects.Queries.GetById;
@@ -17,7 +18,9 @@ public class GetProjectByIdQueryHandler
         var project = await _projectRepository.GetByIdAsync(query.Id);
 
         if (project is null)
+        {
             return Result<ProjectDto>.Failure(Error.NotFound("Project", query.Id));
+        }
 
         var dto = new ProjectDto(
             project.Id,
