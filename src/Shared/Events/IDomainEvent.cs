@@ -1,4 +1,4 @@
-namespace Domain.Common;
+namespace Shared.Events;
 
 public interface IDomainEvent
 {
