@@ -10,15 +10,14 @@ public class CreateTaskValidator : IValidator<CreateTaskCommand>
         var result = new ValidationResult();
 
         if (string.IsNullOrWhiteSpace(request.Title))
-            result.AddError(ValidationMessages.TaskTitleRequired);
-
+            result.AddError("Title", ValidationMessages.TaskTitleRequired);
         if (request.ProjectId == Guid.Empty)
-            result.AddError(ValidationMessages.ProjectIdRequired);
+            result.AddError("ProjectId", ValidationMessages.ProjectIdRequired);
 
         if (request.StartDate.HasValue && request.EndDate.HasValue &&
             request.StartDate > request.EndDate)
         {
-            result.AddError(ValidationMessages.StartDateMustBeBeforeEndDate);
+            result.AddError("StartDate", ValidationMessages.StartDateMustBeBeforeEndDate);
         }
 
         return result;

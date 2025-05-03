@@ -11,7 +11,7 @@ public class GetTaskByIdValidator : IValidator<GetTaskByIdQuery>
         
         if (request.Id == Guid.Empty)
         {
-            result.AddError(ValidationMessages.TaskIdRequired);
+            result.AddError("Id", ValidationMessages.TaskIdRequired);
         }
 
         return result;
