@@ -4,18 +4,11 @@ using Shared.Results;
 
 namespace Application.Features.Comments.Queries;
 
-public class GetCommentByIdQueryHandler
+public class GetCommentByIdQueryHandler(ICommentRepository commentRepository)
 {
-    private readonly ICommentRepository _commentRepository;
-
-    public GetCommentByIdQueryHandler(ICommentRepository commentRepository)
-    {
-        _commentRepository = commentRepository;
-    }
-
     public async Task<Result<CommentDto>> Handle(GetCommentByIdQuery query, CancellationToken cancellationToken)
     {
-        var comment = await _commentRepository.GetByIdAsync(query.Id);
+        var comment = await commentRepository.GetByIdAsync(query.Id);
 
         if (comment is null)
         {

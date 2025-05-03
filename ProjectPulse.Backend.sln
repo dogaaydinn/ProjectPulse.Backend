@@ -19,6 +19,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{550F6BF5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectPulse.UnitTests", "ProjectPulse.UnitTests\ProjectPulse.UnitTests.csproj", "{BD797DCE-FBB5-4704-ABB1-15DB0D57A62A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{990C60CD-5DB1-44B2-80E0-FE26470FAAEF}"
+	ProjectSection(SolutionItems) = preProject
+		docs\ARCHITECTURE_OVERVIEW.md = docs\ARCHITECTURE_OVERVIEW.md
+		docs\DECISIONS_LOG.md = docs\DECISIONS_LOG.md
+		docs\SECURITY_NOTES.md = docs\SECURITY_NOTES.md
+		docs\DEPLOYMENT_GUIDE.md = docs\DEPLOYMENT_GUIDE.md
+		docs\PROJECT_TODO.md = docs\PROJECT_TODO.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

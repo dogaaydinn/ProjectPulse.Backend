@@ -10,13 +10,13 @@ public class CreateProjectValidator : IValidator<CreateProjectCommand>
         var result = new ValidationResult();
 
         if (string.IsNullOrWhiteSpace(request.Name))
-            result.AddError("Name", ValidationMessages.ProjectNameRequired);
+            result.AddError("Name", ValidationMessages.Project.ProjectNameRequired);
 
         if (request.StartDate > (request.EndDate ?? DateTime.MaxValue))
-            result.AddError("StartDate", ValidationMessages.StartDateMustBeBeforeEndDate);
+            result.AddError("StartDate", ValidationMessages.Common.StartDateMustBeBeforeEndDate);
 
         if (request.ManagerId == Guid.Empty)
-            result.AddError("ManagerId", ValidationMessages.ManagerIdRequired);
+            result.AddError("ManagerId", ValidationMessages.Project.ManagerIdRequired);
 
         return result;
     }

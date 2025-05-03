@@ -11,7 +11,7 @@ public class GetProjectByIdValidator : IValidator<GetProjectByIdQuery>
 
         if (request.ProjectId == Guid.Empty)
         {
-            result.AddError("ProjectId", ValidationMessages.ProjectIdRequired);
+            result.AddError("ProjectId", ValidationMessages.Common.ProjectIdRequired);
         }
 
         return result;

@@ -24,7 +24,7 @@ public class Comment : BaseEntity
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void UpdateContent(string content)
+    private void UpdateContent(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
             throw new AppException("Validation.Comment.Content", "Comment cannot be empty.");

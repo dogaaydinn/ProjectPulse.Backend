@@ -6,40 +6,36 @@ using Shared.Results;
 
 namespace Application.Services;
 
-public class ProjectService : IProjectService
+public class ProjectService(
+    IProjectFactory projectFactory,
+    IProjectRepository projectRepository,
+    IUnitOfWork unitOfWork)
+    : IProjectService
 {
-    private readonly IProjectFactory _projectFactory;
-    private readonly IProjectRepository _projectRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public ProjectService(
-        IProjectFactory projectFactory,
-        IProjectRepository projectRepository,
-        IUnitOfWork unitOfWork)
-    {
-        _projectFactory = projectFactory;
-        _projectRepository = projectRepository;
-        _unitOfWork = unitOfWork;
-    }
+    #region CreateProjectAsync
 
     public async Task<Result<Guid>> CreateProjectAsync(CreateProjectRequest request)
     {
-        var project = _projectFactory.Create(
+        var project = projectFactory.Create(
             request.Name,
             request.Description,
             request.StartDate,
             request.EndDate,
             request.ManagerId);
 
-        await _projectRepository.AddAsync(project);
-        await _unitOfWork.SaveChangesAsync();
+        await projectRepository.AddAsync(project);
+        await unitOfWork.SaveChangesAsync();
 
         return Result<Guid>.Success(project.Id);
     }
 
+    #endregion
+    
+    #region GetProjectByIdAsync
+
     public async Task<Result<ProjectDto>> GetProjectByIdAsync(Guid projectId)
     {
-        var project = await _projectRepository.GetByIdAsync(projectId);
+        var project = await projectRepository.GetByIdAsync(projectId);
 
         if (project == null)
             return Result<ProjectDto>.Failure(Error.NotFound("Project", projectId));
@@ -55,9 +51,14 @@ public class ProjectService : IProjectService
         return Result<ProjectDto>.Success(dto);
     }
 
+
+    #endregion
+
+    #region GetAllProjectsAsync
+
     public async Task<Result<List<ProjectDto>>> GetAllProjectsAsync()
     {
-        var projects = await _projectRepository.GetAllAsync();
+        var projects = await projectRepository.GetAllAsync();
 
         var dtos = projects.Select(p => new ProjectDto(
             p.Id,
@@ -70,15 +71,19 @@ public class ProjectService : IProjectService
         return Result<List<ProjectDto>>.Success(dtos);
     }
 
+    #endregion
+    
+    #region UpdateProjectAsync
+
     public async Task<Result<ProjectDto>> UpdateProjectAsync(UpdateProjectRequest request)
     {
-        var project = await _projectRepository.GetByIdAsync(request.Id);
+        var project = await projectRepository.GetByIdAsync(request.Id);
 
         if (project == null)
             return Result<ProjectDto>.Failure(Error.NotFound("Project", request.Id));
 
         project.UpdateDetails(request.Name, request.Description, request.Status, request.Priority);
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
         var dto = new ProjectDto(
             project.Id,
@@ -91,16 +96,23 @@ public class ProjectService : IProjectService
         return Result<ProjectDto>.Success(dto);
     }
 
+    #endregion
+    
+    #region DeleteProjectAsync
+
     public async Task<Result> DeleteProjectAsync(Guid projectId)
     {
-        var project = await _projectRepository.GetByIdAsync(projectId);
+        var project = await projectRepository.GetByIdAsync(projectId);
 
         if (project == null)
             return Result.Failure(Error.NotFound("Project", projectId));
 
-        _projectRepository.Delete(project);
-        await _unitOfWork.SaveChangesAsync();
+        projectRepository.Delete(project);
+        await unitOfWork.SaveChangesAsync();
 
         return Result.Success();
     }
+
+    #endregion
+
 }

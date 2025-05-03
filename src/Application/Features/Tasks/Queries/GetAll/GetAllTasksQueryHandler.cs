@@ -4,18 +4,11 @@ using Shared.Results;
 
 namespace Application.Features.Tasks.Queries.GetAll;
 
-public class GetAllTasksQueryHandler
+public class GetAllTasksQueryHandler(ITaskRepository taskRepository)
 {
-    private readonly ITaskRepository _taskRepository;
-
-    public GetAllTasksQueryHandler(ITaskRepository taskRepository)
-    {
-        _taskRepository = taskRepository;
-    }
-
     public async Task<Result<List<TaskDto>>> Handle(GetAllTasksQuery query, CancellationToken cancellationToken)
     {
-        var tasks = await _taskRepository.GetAllAsync();
+        var tasks = await taskRepository.GetAllAsync();
 
         var dtoList = tasks.Select(task => new TaskDto(
             task.Id,

@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class CommentRepository : BaseRepository<Comment>, ICommentRepository
+public class CommentRepository(AppDbContext context) : BaseRepository<Comment>(context), ICommentRepository
 {
-    public CommentRepository(AppDbContext context) : base(context) { }
-
     public async Task<List<Comment>> GetByTaskIdAsync(Guid taskId) =>
-        await _context.Comments.Where(c => c.TaskItemId == taskId).ToListAsync();
+        await Context.Comments.Where(c => c.TaskItemId == taskId).ToListAsync();
 }

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="Behaviors\" />
+    <Folder Include="Features\Tasks\Commands\Delete\" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -6,13 +6,13 @@ namespace Infrastructure.Persistence.Repositories;
 
 public class BaseRepository<T> : IRepository<T> where T : BaseEntity
 {
-    protected readonly AppDbContext _context;
-    protected readonly DbSet<T> _dbSet;
+    protected readonly AppDbContext Context;
+    private readonly DbSet<T> _dbSet;
 
-    public BaseRepository(AppDbContext context)
+    protected BaseRepository(AppDbContext context)
     {
-        _context = context;
-        _dbSet = _context.Set<T>();
+        Context = context;
+        _dbSet = Context.Set<T>();
     }
 
     public virtual async Task<T?> GetByIdAsync(Guid id)

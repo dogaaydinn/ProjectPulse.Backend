@@ -3,11 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options) { }
-
     public DbSet<TaskItem> Tasks => Set<TaskItem>();
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Comment> Comments => Set<Comment>();

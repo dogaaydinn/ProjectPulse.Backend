@@ -1,5 +1,6 @@
 using Shared.Base;
 using Shared.Exceptions;
+using Shared.Constants;
 
 namespace Domain.Entities;
 
@@ -15,10 +16,21 @@ public class TeamProject : BaseEntity
 
     internal TeamProject(Guid teamId, Guid projectId)
     {
-        if (teamId == Guid.Empty || projectId == Guid.Empty)
-            throw new AppException("Validation.TeamProject.InvalidIds", "Team and Projects IDs must be valid.");
-
+        Validate(teamId, projectId);
         TeamId = teamId;
         ProjectId = projectId;
+    }
+
+    private static void Validate(Guid teamId, Guid projectId)
+    {
+        if (teamId == Guid.Empty)
+            throw new AppException(
+                ErrorCodes.Validation,
+                ValidationMessages.TeamProject.TeamIdRequired);
+
+        if (projectId == Guid.Empty)
+            throw new AppException(
+                ErrorCodes.Validation,
+                ValidationMessages.Common.ProjectIdRequired);
     }
 }

@@ -4,6 +4,7 @@ namespace Application.Features.Projects.Queries.GetAll;
 
 public class GetAllProjectsValidator : IValidator<GetAllProjectsQuery>
 {
+//TODO: Implement validation for GetAllProjectsQuery
     // This class is empty because the GetAllProjectsQuery does not have any specific validation rules.
     public ValidationResult Validate(GetAllProjectsQuery request)
     {

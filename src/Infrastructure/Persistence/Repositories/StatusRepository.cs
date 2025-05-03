@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories;
 
-public class StatusRepository : BaseRepository<Status>, IStatusRepository
+public class StatusRepository(AppDbContext context) : BaseRepository<Status>(context), IStatusRepository
 {
-    public StatusRepository(AppDbContext context) : base(context) { }
-    
     public async Task<List<Status>> GetByWorkflowIdAsync(Guid workflowId)
     {
-        return await _context.Statuses
+        return await Context.Statuses
             .Where(s => s.WorkflowId == workflowId)
             .OrderBy(s => s.Order)
             .ToListAsync();

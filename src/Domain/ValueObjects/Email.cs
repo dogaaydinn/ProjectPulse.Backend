@@ -4,7 +4,7 @@ namespace Domain.ValueObjects;
 
 public sealed class Email
 {
-    public string Value { get; }
+    private string Value { get; }
 
     private Email(string value)
     {

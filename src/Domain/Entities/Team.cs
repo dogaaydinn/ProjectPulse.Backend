@@ -19,7 +19,7 @@ public class Team : BaseEntity
         Description = description;
     }
 
-    public void SetName(string name)
+    private void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new AppException("Validation.Team.Name", "Team name cannot be empty.");

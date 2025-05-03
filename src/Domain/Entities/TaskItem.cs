@@ -9,7 +9,7 @@ public class TaskItem : BaseAuditableEntity
 {
     public string Title { get; private set; } = string.Empty;
     public string? Description { get; private set; }
-    public DateTime CreatedDate { get; private set; }
+    public new DateTime CreatedDate { get; private set; }
 
     public DateRange? Schedule { get; private set; }
     public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
@@ -49,6 +49,7 @@ public class TaskItem : BaseAuditableEntity
     {
         SetTitle(title);
         Description = description;
+        //TaskPriority mi olmalı?
         Priority = priority;
         Type = type;
         ProjectId = projectId;
@@ -83,4 +84,15 @@ public class TaskItem : BaseAuditableEntity
     {
         ReporterId = reporterId;
     }
+    
+    public void ChangePriority(TaskPriority priority)
+    {
+        Priority = priority;
+    }
+    
+    public void ChangeType(TaskType type)
+    {
+        Type = type;
+    }
+    
 }

@@ -27,7 +27,7 @@ public class Status : BaseEntity
         Color = color;
     }
 
-    public void SetName(string name)
+    private void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new AppException("Validation.Status.Name", "Status name cannot be empty.");

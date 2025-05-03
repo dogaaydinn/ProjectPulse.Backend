@@ -4,18 +4,11 @@ using Shared.Results;
 
 namespace Application.Features.Tasks.Queries.GetById;
 
-public class GetTaskByIdQueryHandler
+public class GetTaskByIdQueryHandler(ITaskRepository taskRepository)
 {
-    private readonly ITaskRepository _taskRepository;
-
-    public GetTaskByIdQueryHandler(ITaskRepository taskRepository)
-    {
-        _taskRepository = taskRepository;
-    }
-
     public async Task<Result<TaskDto>> Handle(GetTaskByIdQuery query, CancellationToken cancellationToken)
     {
-        var task = await _taskRepository.GetByIdAsync(query.Id);
+        var task = await taskRepository.GetByIdAsync(query.Id);
 
         if (task is null)
             return Result<TaskDto>.Failure(Error.NotFound("Task", query.Id));

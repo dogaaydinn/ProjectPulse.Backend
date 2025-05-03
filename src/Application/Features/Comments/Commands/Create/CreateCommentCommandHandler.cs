@@ -4,26 +4,17 @@ using Shared.Results;
 
 namespace Application.Features.Comments.Commands.Create;
 
-public class CreateCommentCommandHandler
+public class CreateCommentCommandHandler(
+    ICommentRepository commentRepository,
+    ICommentFactory commentFactory,
+    IUnitOfWork unitOfWork)
 {
-    private readonly ICommentRepository _commentRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ICommentFactory _commentFactory;
-
-    public CreateCommentCommandHandler(
-        ICommentRepository commentRepository,
-        ICommentFactory commentFactory,
-        IUnitOfWork unitOfWork)
-    {
-        _commentRepository = commentRepository;
-        _unitOfWork = unitOfWork;
-        _commentFactory = commentFactory;
-    }
+    private readonly ICommentRepository _commentRepository = commentRepository;
 
     public async Task<Result<Guid>> Handle(CreateCommentCommand command, CancellationToken cancellationToken)
     {
-        var comment = _commentFactory.Create(command.TaskId, command.AuthorId, command.Content);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        var comment = commentFactory.Create(command.TaskId, command.AuthorId, command.Content);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result<Guid>.Success(comment.Id);
     }
