@@ -14,17 +14,17 @@ public class Comment : BaseEntity
     public Guid AuthorId { get; private set; }
     public User Author { get; private set; } = null!;
 
-    public Comment() { }
+    protected Comment() { }
 
-    internal Comment(string content, Guid taskItemId, Guid authorId)
+    public Comment(string content, Guid taskItemId, Guid authorId)
     {
-        SetContent(content);
+        UpdateContent(content);
         TaskItemId = taskItemId;
         AuthorId = authorId;
         CreatedAt = DateTime.UtcNow;
     }
 
-    private void SetContent(string content)
+    public void UpdateContent(string content)
     {
         if (string.IsNullOrWhiteSpace(content))
             throw new AppException("Validation.Comment.Content", "Comment cannot be empty.");

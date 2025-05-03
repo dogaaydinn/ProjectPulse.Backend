@@ -1,5 +1,5 @@
-using Domain.Entities;
 using Domain.Factories;
+using Domain.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Comments.Commands.Create;

@@ -1,19 +1,23 @@
+using Application.Common.Validation;
 using Shared.Constants;
 
 namespace Application.Features.Comments.Commands.Create;
 
-public class CreateCommentValidator : AbstractValidator<CreateCommentCommand>
+public class CreateCommentValidator : IValidator<CreateCommentCommand>
 {
-    public CreateCommentValidator()
+    public ValidationResult Validate(CreateCommentCommand request)
     {
-        RuleFor(x => x.TaskId)
-            .NotEmpty().WithMessage(ValidationMessages.TaskIdRequired);
+        var result = new ValidationResult();
 
-        RuleFor(x => x.AuthorId)
-            .NotEmpty().WithMessage(ValidationMessages.AuthorIdRequired);
+        if (request.TaskId == Guid.Empty)
+            result.AddError(ValidationMessages.TaskIdRequired);
 
-        RuleFor(x => x.Content)
-            .NotEmpty().WithMessage(ValidationMessages.CommentContentRequired)
-            .MaximumLength(1000).WithMessage(ValidationMessages.CommentContentMaxLength);
+        if (request.AuthorId == Guid.Empty)
+            result.AddError(ValidationMessages.AuthorIdRequired);
+
+        if (string.IsNullOrWhiteSpace(request.Content))
+            result.AddError(ValidationMessages.CommentContentRequired);
+
+        return result;
     }
 }

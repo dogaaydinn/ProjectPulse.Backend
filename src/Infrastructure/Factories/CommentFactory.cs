@@ -7,6 +7,6 @@ public class CommentFactory : ICommentFactory
 {
     public Comment Create(Guid taskId, Guid authorId, string content)
     {
-        return new Comment(taskId, authorId, content);
+        return new Comment(content, taskId, authorId);
     }
 }
