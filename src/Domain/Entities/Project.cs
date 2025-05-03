@@ -13,7 +13,7 @@ public class Project : BaseAuditableEntity
     public DateTime? EndDate { get; private set; }
 
     public ProjectStatus Status { get; private set; } = ProjectStatus.Planned;
-    public Priority Priority { get; private set; } = Priority.Normal;
+    public ProjectPriority ProjectPriority { get; private set; } = ProjectPriority.Normal;
 
     public Guid ManagerId { get; private set; }
     public User Manager { get; private set; } = null!;
@@ -35,12 +35,12 @@ public class Project : BaseAuditableEntity
         ManagerId = managerId;
     }
 
-    public void UpdateDetails(string name, string? description, ProjectStatus status, Priority priority)
+    public void UpdateDetails(string name, string? description, ProjectStatus status, ProjectPriority projectPriority)
     {
         SetName(name);
         Description = description;
         Status = status;
-        Priority = priority;
+        ProjectPriority = projectPriority;
     }
 
     public void SetSchedule(DateTime start, DateTime? end)
