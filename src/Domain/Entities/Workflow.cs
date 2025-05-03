@@ -16,7 +16,7 @@ public class Workflow : BaseEntity
 
     protected Workflow() { }
 
-    internal Workflow(string name, Guid projectId, bool isDefault = false)
+    public Workflow(string name, Guid projectId, bool isDefault = false)
     {
         SetName(name);
         ProjectId = projectId;
