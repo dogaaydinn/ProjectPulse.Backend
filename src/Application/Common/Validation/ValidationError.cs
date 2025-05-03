@@ -3,9 +3,9 @@ namespace Application.Common.Validation;
 public class ValidationError
 {
     public string PropertyName { get;  }
-    public string ErrorMessage { get; } 
+    public string ErrorMessage { get; }
 
-    public ValidationError(string propertyName, string errorMessage)
+    private ValidationError(string propertyName, string errorMessage)
     {
         PropertyName = propertyName;
         ErrorMessage = errorMessage;

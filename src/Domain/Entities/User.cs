@@ -11,8 +11,7 @@ public class User : BaseAuditableEntity
     public Email Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = string.Empty;
     public GlobalRole GlobalRole { get; private set; } = GlobalRole.User;
-
-    // Navigation
+    
     public ICollection<Project> ManagedProjects { get; private set; } = new List<Project>();
     public ICollection<TaskItem> AssignedTasks { get; private set; } = new List<TaskItem>();
     public ICollection<TaskItem> ReportedTasks { get; private set; } = new List<TaskItem>();
@@ -32,14 +31,14 @@ public class User : BaseAuditableEntity
         GlobalRole = role;
     }
 
-    public void SetUsername(string username)
+    private void SetUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))
             throw new AppException("Validation.User.Username", "Username is required.");
         Username = username.Trim();
     }
 
-    public void SetPassword(string passwordHash)
+    private void SetPassword(string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new AppException("Validation.User.Password", "Password cannot be empty.");

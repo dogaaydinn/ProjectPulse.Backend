@@ -10,10 +10,10 @@ public class UpdateProjectCommandValidator : IValidator<UpdateProjectCommand>
         var result = new ValidationResult();
 
         if (string.IsNullOrWhiteSpace(command.Name))
-            result.AddError("Name", ValidationMessages.ProjectNameRequired);
+            result.AddError("Name", ValidationMessages.Project.ProjectNameRequired);
 
         if (command.ManagerId == Guid.Empty)
-            result.AddError("ManagerId", ValidationMessages.ManagerIdRequired);
+            result.AddError("ManagerId", ValidationMessages.Project.ManagerIdRequired);
 
         return result;
     }
