@@ -3,12 +3,12 @@ namespace Application.Common.Validation;
 public class ValidationResult
 {
     public bool IsValid => Errors.Count == 0;
-    public List<string> Errors { get; } = new();
+    public List<ValidationError> Errors { get; } = new();
 
-    public void AddError(string message)
+    public void AddError(string propertyName, string message)
     {
         if (!string.IsNullOrWhiteSpace(message))
-            Errors.Add(message);
+            Errors.Add(ValidationError.Create(propertyName, message));
     }
 
     public static ValidationResult Success() => new();

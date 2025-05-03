@@ -3,16 +3,17 @@ using Shared.Constants;
 
 namespace Application.Features.Projects.Queries.GetById;
 
-public class GetProjectByIdValidator :IValidator<GetProjectByIdQuery>
+public class GetProjectByIdValidator : IValidator<GetProjectByIdQuery>
 {
     public ValidationResult Validate(GetProjectByIdQuery request)
     {
         var result = new ValidationResult();
-        
-        if (request.Id == Guid.Empty)
+
+        if (request.ProjectId == Guid.Empty)
         {
-            result.AddError(ValidationMessages.ProjectIdRequired);
+            result.AddError("ProjectId", ValidationMessages.ProjectIdRequired);
         }
+
         return result;
     }
 }

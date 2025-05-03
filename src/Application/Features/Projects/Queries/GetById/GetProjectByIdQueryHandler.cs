@@ -15,12 +15,10 @@ public class GetProjectByIdQueryHandler
 
     public async Task<Result<ProjectDto>> Handle(GetProjectByIdQuery query, CancellationToken cancellationToken)
     {
-        var project = await _projectRepository.GetByIdAsync(query.Id);
+        var project = await _projectRepository.GetByIdAsync(query.ProjectId);
 
         if (project is null)
-        {
-            return Result<ProjectDto>.Failure(Error.NotFound("Project", query.Id));
-        }
+            return Result<ProjectDto>.Failure(Error.NotFound("Project", query.ProjectId));
 
         var dto = new ProjectDto(
             project.Id,
