@@ -6,5 +6,7 @@ public record ProjectDto(
     string? Description,
     DateTime StartDate,
     DateTime? EndDate,
-    Guid ManagerId
+    Guid ManagerId,
+    string Status,
+    string Priority
 );

@@ -35,4 +35,9 @@ public class Error
     {
         return new Error(ErrorCodes.NotFound, message);
     }
+    
+    public static Error Schedule(string message)
+    {
+        return new Error(ErrorCodes.Schedule, message);
+    }
 }

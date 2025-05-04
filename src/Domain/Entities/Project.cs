@@ -1,5 +1,6 @@
 using Domain.Enums;
 using Shared.Base;
+using Shared.Constants;
 using Shared.Exceptions;
 
 namespace Domain.Entities;
@@ -46,7 +47,7 @@ public class Project : BaseAuditableEntity
     public void SetSchedule(DateTime start, DateTime? end)
     {
         if (end.HasValue && end < start)
-            throw new AppException("Validation.Projects.Schedule", "End date cannot be earlier than start date.");
+            throw new AppException(ErrorCodes.Validation, ValidationMessages.Common.StartDateMustBeBeforeEndDate);
 
         StartDate = start;
         EndDate = end;
@@ -55,14 +56,17 @@ public class Project : BaseAuditableEntity
     private void SetName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new AppException("Validation.Projects.Name", "Projects name is required.");
+            throw new AppException(ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
+
         Name = name;
     }
+
 
     public void AssignManager(Guid managerId)
     {
         if (managerId == Guid.Empty)
-            throw new AppException("Validation.Projects.Manager", "Manager ID cannot be empty.");
+            throw new AppException(ErrorCodes.Validation, ValidationMessages.Project.ManagerIdRequired);
+
         ManagerId = managerId;
     }
 }
