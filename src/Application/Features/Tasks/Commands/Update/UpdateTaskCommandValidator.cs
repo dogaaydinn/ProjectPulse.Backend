@@ -11,16 +11,16 @@ public class UpdateTaskCommandValidator : IValidator<UpdateTaskCommand>
         var result = new ValidationResult();
 
         if (command.Id == Guid.Empty)
-            result.AddError("Id", ValidationMessages.TaskId.TaskIdRequired);
+            result.AddError("TaskId", ValidationMessages.Common.TaskIdRequired);
 
         if (string.IsNullOrWhiteSpace(command.Title))
             result.AddError("Title", ValidationMessages.Task.TitleRequired);
 
         if (!Enum.TryParse(command.Priority, true, out _))
-            result.AddError("Priority", ValidationMessages.Task.InvalidPriority);
+            result.AddError("Priority", ValidationMessages.Common.InvalidPriority);
 
         if (!Enum.TryParse(command.Type, true, out _))
-            result.AddError("Type", ValidationMessages.Task.InvalidType);
+            result.AddError("Type", ValidationMessages.Common.InvalidType);
 
         return result;
     }

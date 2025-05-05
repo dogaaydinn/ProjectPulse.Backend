@@ -19,7 +19,9 @@ public class GetProjectByIdQueryHandler(IProjectRepository projectRepository)
             project.Description,
             project.StartDate,
             project.EndDate,
-            project.ManagerId
+            project.ManagerId,
+            project.Status.ToString(),
+            project.ProjectPriority.ToString()
         );
 
         return Result<ProjectDto>.Success(dto);

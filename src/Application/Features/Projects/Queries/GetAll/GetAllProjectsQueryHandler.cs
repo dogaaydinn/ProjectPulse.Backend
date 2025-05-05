@@ -16,7 +16,9 @@ public class GetAllProjectsQueryHandler(IProjectRepository projectRepository)
             p.Description,
             p.StartDate,
             p.EndDate,
-            p.ManagerId
+            p.ManagerId,
+            p.Status.ToString(),
+            p.ProjectPriority.ToString()
         )).ToList();
 
         return Result<List<ProjectDto>>.Success(dtoList);
