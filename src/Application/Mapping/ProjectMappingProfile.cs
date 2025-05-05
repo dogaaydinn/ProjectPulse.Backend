@@ -10,6 +10,6 @@ public class ProjectMappingProfile : Profile
     {
         CreateMap<Project, ProjectDto>()
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
-            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.ProjectPriority.ToString()));
+            .ForMember(dest => dest.Priority, opt => opt.MapFrom(src => src.Priority.ToString()));
     }
 }

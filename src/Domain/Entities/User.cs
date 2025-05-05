@@ -22,15 +22,22 @@ public class User : BaseAuditableEntity
     public ICollection<UserTeam> UserTeams { get; private set; } = new List<UserTeam>();
 
     protected User() { }
+    
 
-    public User(string username, Email email, string passwordHash, GlobalRole role = GlobalRole.User)
+    public User(string username, Email email, string passwordHash)
+        : this(username, email, passwordHash, GlobalRole.User)
     {
-        SetUsername(username);
-        SetPassword(passwordHash);
-        Email = email;
-        GlobalRole = role;
+ 
     }
 
+    private User(string username, Email email, string passwordHash, GlobalRole globalRole)
+    {
+        SetUsername(username);
+        Email = email;
+        SetPassword(passwordHash);
+        GlobalRole = globalRole;
+    }
+    
     private void SetUsername(string username)
     {
         if (string.IsNullOrWhiteSpace(username))

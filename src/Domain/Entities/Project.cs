@@ -9,12 +9,11 @@ public class Project : BaseAuditableEntity
 {
     public string Name { get; private set; } = string.Empty;
     public string? Description { get; private set; }
-
     public DateTime StartDate { get; private set; }
     public DateTime? EndDate { get; private set; }
 
     public ProjectStatus Status { get; private set; } = ProjectStatus.Planned;
-    public ProjectPriority ProjectPriority { get; private set; } = ProjectPriority.Normal;
+    public ProjectPriority Priority { get; private set; } = ProjectPriority.Medium;
 
     public Guid ManagerId { get; private set; }
     public User Manager { get; private set; } = null!;
@@ -27,26 +26,28 @@ public class Project : BaseAuditableEntity
 
     protected Project() { }
 
-    public Project(string name, string? description, DateTime startDate, DateTime? endDate, Guid managerId)
+    public Project(string name, string? description, DateTime startDate, DateTime? endDate, Guid managerId, ProjectStatus status, ProjectPriority priority)
     {
         SetName(name);
         Description = description;
         StartDate = startDate;
         EndDate = endDate;
         ManagerId = managerId;
+        Status = status;
+        Priority = priority;
     }
 
-    public void UpdateDetails(string name, string? description, ProjectStatus status, ProjectPriority projectPriority)
+    public void UpdateDetails(string name, string? description, ProjectStatus status, ProjectPriority priority)
     {
         SetName(name);
         Description = description;
         Status = status;
-        ProjectPriority = projectPriority;
+        Priority = priority;
     }
 
     public void SetSchedule(DateTime start, DateTime? end)
     {
-        if (end.HasValue && end < start)
+        if (end < start)
             throw new AppException(ErrorCodes.Validation, ValidationMessages.Common.StartDateMustBeBeforeEndDate);
 
         StartDate = start;
@@ -60,7 +61,6 @@ public class Project : BaseAuditableEntity
 
         Name = name;
     }
-
 
     public void AssignManager(Guid managerId)
     {

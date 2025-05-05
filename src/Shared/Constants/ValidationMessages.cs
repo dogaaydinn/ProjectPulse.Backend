@@ -46,5 +46,7 @@ public static class ValidationMessages
         public const string StartDateMustBeBeforeEndDate = "Start date must be before end date.";
         public const string ProjectIdRequired = "Projects ID is required.";
         public const string TaskIdRequired = "Task ID is required.";
+        public const string InvalidPriority = "Invalid priority.";
+        public const string InvalidType = "Invalid type.";
     }
 }

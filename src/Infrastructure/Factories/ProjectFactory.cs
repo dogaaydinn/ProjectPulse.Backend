@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Factories;
 using Shared.Constants;
 using Shared.Exceptions;
@@ -22,7 +23,14 @@ public class ProjectFactory : IProjectFactory
 
         if (endDate.HasValue && endDate < startDate)
             throw new AppException(ErrorCodes.Validation, ValidationMessages.Common.StartDateMustBeBeforeEndDate);
-        var project = new Project(name, description, startDate, endDate, managerId);
+        var project = new Project(
+            name,
+            description,
+            startDate,
+            endDate,
+            managerId,
+            ProjectStatus.Planned,
+            ProjectPriority.Medium);
         return project;
     }
 }

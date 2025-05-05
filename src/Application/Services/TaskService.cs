@@ -97,8 +97,7 @@ public class TaskService : ITaskService
         task.SetSchedule(request.StartDate, request.EndDate);
         task.AssignTo(request.AssigneeId);
         task.SetReporter(request.ReporterId);
-
-        // Enum parse & set (güvenli)
+        
         if (Enum.TryParse<TaskPriority>(request.Priority, true, out var priority))
             task.ChangePriority(priority);
 
