@@ -1,7 +1,10 @@
-using Domain.Entities;
+using Domain.Modules.Projects.Entities;
+using Domain.Modules.Tasks.Entities;
+using Domain.Modules.Teams.Entities;
+using Domain.Modules.Users.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Persistence.Context;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
