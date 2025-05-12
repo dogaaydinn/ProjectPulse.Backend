@@ -1,9 +1,12 @@
 using API.Middleware;
 using Application.Mapping;
+using Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(ProjectMappingProfile).Assembly);
+builder.Services.AddAuthenticationServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 // TODO: Diğer Service, Repository, DbContext vs. bağımlılıkları da buraya eklenecek
 

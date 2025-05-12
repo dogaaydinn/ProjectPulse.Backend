@@ -46,7 +46,31 @@ public static class ValidationMessages
         public const string StartDateMustBeBeforeEndDate = "Start date must be before end date.";
         public const string ProjectIdRequired = "Projects ID is required.";
         public const string TaskIdRequired = "Task ID is required.";
-        public const string InvalidPriority = "Invalid priority.";
-        public const string InvalidType = "Invalid type.";
+        public const string LocalizedStringRequired = "At least one localized value must be provided.";
+    }
+
+    public static class User
+    {
+        public const string UsernameRequired = "Username is required.";
+        public const string PasswordHashInvalid = "Password hash is invalid.";
+        public const string PasswordHasherNull = "Password hasher cannot be null.";
+        public const string InvalidRole = "Invalid role.";
+    }
+    public static class Email
+    {
+        public const string Empty = "Email address cannot be empty.";
+        public const string Invalid = "Email address is invalid.";
+    }
+    
+    public static class Status
+    {
+        public const string NameRequired = "Status name is required.";
+        public const string OrderMustBeNonNegative = "Status order cannot be negative.";
+    }
+    
+    public static class Label
+    {
+        public const string NameRequired = "Label name is required.";
+        public const string ColorFormatInvalid = "Color format is invalid.";
     }
 }
