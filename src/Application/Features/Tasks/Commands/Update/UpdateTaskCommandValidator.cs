@@ -15,13 +15,7 @@ public class UpdateTaskCommandValidator : IValidator<UpdateTaskCommand>
 
         if (string.IsNullOrWhiteSpace(command.Title))
             result.AddError("Title", ValidationMessages.Task.TitleRequired);
-
-        if (!Enum.TryParse(command.Priority, true, out _))
-            result.AddError("Priority", ValidationMessages.Common.InvalidPriority);
-
-        if (!Enum.TryParse(command.Type, true, out _))
-            result.AddError("Type", ValidationMessages.Common.InvalidType);
-
+        
         return result;
     }
 }

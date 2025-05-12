@@ -1,9 +1,11 @@
-using Domain.Enums;
-using Domain.ValueObjects;
+using Domain.Core.ValueObjects;
+using Domain.Modules.Projects.Entities;
+using Domain.Modules.Tasks.Enums;
+using Domain.Modules.Users.Entities;
 using Shared.Base;
 using Shared.Exceptions;
 
-namespace Domain.Entities;
+namespace Domain.Modules.Tasks.Entities;
 
 public class TaskItem : BaseAuditableEntity
 {
@@ -66,6 +68,21 @@ public class TaskItem : BaseAuditableEntity
         Schedule = (start != null && end != null)
             ? DateRange.Create(start.Value, end.Value)
             : null;
+    }
+    
+    public void UpdateDetails(
+        string title,
+        string? description,
+        TaskPriority priority,
+        TaskType type,
+        DateTime? start,
+        DateTime? end)
+    {
+        SetTitle(title);
+        Description = description;
+        Priority = priority;
+        Type = type;
+        SetSchedule(start, end);
     }
 
     public void SetTitle(string title)

@@ -1,5 +1,5 @@
 using Application.DTOs;
-using Domain.Repositories;
+using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Projects.Queries.GetAll;
@@ -18,7 +18,7 @@ public class GetAllProjectsQueryHandler(IProjectRepository projectRepository)
             p.EndDate,
             p.ManagerId,
             p.Status.ToString(),
-            p.ProjectPriority.ToString()
+            p.Priority.ToString()
         )).ToList();
 
         return Result<List<ProjectDto>>.Success(dtoList);

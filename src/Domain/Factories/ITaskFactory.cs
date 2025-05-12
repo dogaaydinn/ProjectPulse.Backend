@@ -1,5 +1,5 @@
-using Domain.Entities;
-using Domain.Enums;
+using Domain.Modules.Tasks.Entities;
+using Domain.Modules.Tasks.Enums;
 
 namespace Domain.Factories;
 

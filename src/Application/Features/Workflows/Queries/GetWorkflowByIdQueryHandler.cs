@@ -1,5 +1,5 @@
 using Application.DTOs;
-using Domain.Repositories;
+using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Workflows.Queries;

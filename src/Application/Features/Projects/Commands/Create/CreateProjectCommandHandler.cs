@@ -1,5 +1,6 @@
+using Domain.Core.Persistence;
 using Domain.Factories;
-using Domain.Repositories;
+using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Projects.Commands.Create;

@@ -1,3 +1,6 @@
+using Domain.Core.Primitives.Enums.Attributes;
+using Domain.Modules.Tasks.Enums;
+
 namespace Application.DTOs;
 
 public class UpdateTaskRequest
@@ -6,8 +9,12 @@ public class UpdateTaskRequest
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }
     
-    public string Priority { get; set; } = "Medium";
-    public string Type { get; set; } = "Task";
+    [StructuredEnumName(typeof(TaskPriority), allowNull: false)]
+    public string Priority { get; set; } = TaskPriority.Medium.Name;
+
+    [StructuredEnumName(typeof(TaskType), allowNull: false)]
+    public string Type { get; set; } = TaskType.Feature.Name;
+
     public Guid ProjectId { get; set; }
     public Guid? AssigneeId { get; set; }
     public Guid? ReporterId { get; set; }

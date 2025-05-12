@@ -1,8 +1,9 @@
 using Application.DTOs;
 using Application.Interfaces;
-using Domain.Enums;
+using Domain.Core.Persistence;
 using Domain.Factories;
-using Domain.Repositories;
+using Domain.Modules.Tasks.Enums;
+using Domain.Modules.Tasks.Repositories;
 using Shared.Results;
 
 namespace Application.Services;

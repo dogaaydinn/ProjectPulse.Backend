@@ -1,10 +1,9 @@
-using Domain.Entities;
-using Domain.Enums;
-using Domain.Factories;
+using Domain.Modules.Tasks.Entities;
+using Domain.Modules.Tasks.Enums;
 
 namespace Infrastructure.Factories;
 
-public class TaskFactory : ITaskFactory
+public class TaskFactory
 {
     public TaskItem Create(
         string title,
@@ -12,10 +11,24 @@ public class TaskFactory : ITaskFactory
         TaskPriority priority,
         TaskType type,
         Guid projectId,
-        Guid? assigneeId = null,
-        Guid? reporterId = null)
+        Guid? assigneeId,
+        Guid? reporterId)
     {
-        var task = new TaskItem(title, description, priority, type, projectId, assigneeId, reporterId);
-        return task;
+        return new TaskItem(title, description, priority, type, projectId, assigneeId, reporterId);
+    }
+
+    public TaskItem Create(
+        string title,
+        string? description,
+        string priorityName,
+        string typeName,
+        Guid projectId,
+        Guid? assigneeId,
+        Guid? reporterId)
+    {
+        var priority = TaskPriority.ConvertOrThrow(priorityName);
+        var type = TaskType.ConvertOrThrow(typeName);
+
+        return new TaskItem(title, description, priority, type, projectId, assigneeId, reporterId);
     }
 }

@@ -1,4 +1,3 @@
-
 using Application.Common.Validation;
 
 namespace Application.Features.Tasks.Queries.GetAll;

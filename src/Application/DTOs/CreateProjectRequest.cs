@@ -1,5 +1,5 @@
-using Domain.Enums;
-using Domain.Primitives.Enums.StructuredEnum;
+using Domain.Core.Primitives.Enums.Attributes;
+using Domain.Modules.Projects.Enums;
 
 namespace Application.DTOs;
 
@@ -15,5 +15,5 @@ public class CreateProjectRequest
     public string Status { get; set; } = ProjectStatus.Planned.Name;
 
     [StructuredEnumName(typeof(ProjectPriority), allowNull: false)]
-    public string Priority { get; set; } = ProjectPriority.Normal.Name;
+    public string Priority { get; set; } = ProjectPriority.Medium.Name;
 }

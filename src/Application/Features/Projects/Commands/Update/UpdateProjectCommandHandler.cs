@@ -1,4 +1,5 @@
-using Domain.Repositories;
+using Domain.Core.Persistence;
+using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Projects.Commands.Update;

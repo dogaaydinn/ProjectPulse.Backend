@@ -1,4 +1,4 @@
-using Domain.Entities;
+using Domain.Modules.Tasks.Entities;
 
 namespace Domain.Factories;
 

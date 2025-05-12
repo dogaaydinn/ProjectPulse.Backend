@@ -1,8 +1,9 @@
-using Domain.Repositories;
+using Domain.Core.Persistence;
+using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Shared.Base;
 
-namespace Infrastructure.Persistence.Repositories;
+namespace Infrastructure.Persistence.Common;
 
 public class BaseRepository<T> : IRepository<T> where T : BaseEntity
 {

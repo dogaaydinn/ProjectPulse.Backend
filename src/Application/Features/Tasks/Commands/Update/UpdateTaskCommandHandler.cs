@@ -1,6 +1,7 @@
 using Application.DTOs;
-using Domain.Enums;
-using Domain.Repositories;
+using Domain.Core.Persistence;
+using Domain.Modules.Tasks.Enums;
+using Domain.Modules.Tasks.Repositories;
 using Shared.Results;
 
 namespace Application.Features.Tasks.Commands.Update;
@@ -14,8 +15,8 @@ public class UpdateTaskCommandHandler(ITaskRepository taskRepository, IUnitOfWor
         if (task is null)
             return Result.Failure(Error.NotFound("Task", command.Id));
 
-        var priority = Enum.Parse<TaskPriority>(command.Priority, true);
-        var type = Enum.Parse<TaskType>(command.Type, true);
+        var priority = TaskPriority.ConvertOrThrow(command.Priority);
+        var type = TaskType.ConvertOrThrow(command.Type);
 
         task.SetTitle(command.Title);
         task.SetSchedule(command.StartDate, command.EndDate);

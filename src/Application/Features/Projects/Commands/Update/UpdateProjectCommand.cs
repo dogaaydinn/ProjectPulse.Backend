@@ -1,4 +1,4 @@
-using Domain.Enums;
+using Domain.Modules.Projects.Enums;
 
 namespace Application.Features.Projects.Commands.Update;
 
