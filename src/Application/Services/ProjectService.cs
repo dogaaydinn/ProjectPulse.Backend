@@ -1,8 +1,10 @@
 using Application.DTOs;
 using Application.Interfaces;
-using Domain.Enums;
+using Domain.Core.Persistence;
+using Domain.Core.Primitives.Enums.Converters;
 using Domain.Factories;
-using Domain.Repositories;
+using Domain.Modules.Projects.Enums;
+using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
 namespace Application.Services;
@@ -27,14 +29,20 @@ public class ProjectService : IProjectService
 
     public async Task<Result<Guid>> CreateProjectAsync(CreateProjectRequest request)
     {
+        if (!ProjectStatus.TryFromName(request.Status, out var status))
+            return Result<Guid>.Failure(Error.Validation("Invalid project status."));
+
+        if (!ProjectPriority.TryFromName(request.Priority, out var priority))
+            return Result<Guid>.Failure(Error.Validation("Invalid project priority."));
+
         var project = _projectFactory.Create(
             request.Name,
             request.Description,
             request.StartDate,
             request.EndDate,
-            request.ManagerId);
-
-        project.UpdateDetails(request.Name, request.Description, status, request.Priority);
+            request.ManagerId,
+            status,
+            priority);
 
         await _projectRepository.AddAsync(project);
         await _unitOfWork.SaveChangesAsync();
@@ -62,7 +70,7 @@ public class ProjectService : IProjectService
             project.EndDate,
             project.ManagerId,
             project.Status.ToString(),
-            project.ProjectPriority.ToString()
+            project.Priority.ToString()
         );
 
         return Result<ProjectDto>.Success(dto);
@@ -84,7 +92,7 @@ public class ProjectService : IProjectService
             p.EndDate,
             p.ManagerId,
             p.Status.ToString(),
-            p.ProjectPriority.ToString()
+            p.Priority.ToString()
         )).ToList();
 
         return Result<List<ProjectDto>>.Success(dtos);
@@ -98,32 +106,36 @@ public class ProjectService : IProjectService
     {
         var project = await _projectRepository.GetByIdAsync(request.Id);
 
-        if (project == null)
+        if (project is null)
             return Result<ProjectDto>.Failure(Error.NotFound("Project", request.Id));
 
-        if (!Enum.TryParse<ProjectStatus>(request.Status, true, out var status))
-            return Result<ProjectDto>.Failure(Error.Validation("Invalid project status."));
+        var statusResult = StructuredEnumConverter.ConvertAsResult<ProjectStatus>(request.Status);
+        if (statusResult.IsFailure)
+            return Result<ProjectDto>.Failure(statusResult.Error);
 
-        if (!Enum.TryParse<ProjectPriority>(request.Priority, true, out var priority))
-            return Result<ProjectDto>.Failure(Error.Validation("Invalid project priority."));
+        var priorityResult = StructuredEnumConverter.ConvertAsResult<ProjectPriority>(request.Priority);
+        if (priorityResult.IsFailure)
+            return Result<ProjectDto>.Failure(priorityResult.Error);
 
-        project.UpdateDetails(request.Name, request.Description, status, priority);
+        project.UpdateDetails(
+            request.Name,
+            request.Description,
+            statusResult.Value,
+            priorityResult.Value);
+
         await _unitOfWork.SaveChangesAsync();
 
-        var dto = new ProjectDto(
+        return Result<ProjectDto>.Success(new ProjectDto(
             project.Id,
             project.Name,
             project.Description,
             project.StartDate,
             project.EndDate,
             project.ManagerId,
-            project.Status.ToString(),
-            project.ProjectPriority.ToString()
-        );
-
-        return Result<ProjectDto>.Success(dto);
+            project.Status.Name,
+            project.Priority.Name
+        ));
     }
-
     #endregion
 
     #region DeleteProjectAsync
