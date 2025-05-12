@@ -1,8 +1,10 @@
-using Domain.Entities;
-using Domain.Repositories;
+using Domain.Modules.Projects.Entities;
+using Domain.Modules.Projects.Repositories;
+using Infrastructure.Persistence.Common;
+using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence.Repositories;
+namespace Infrastructure.Persistence.Repositories.Projects;
 
 public class WorkflowRepository(AppDbContext context) : BaseRepository<Workflow>(context), IWorkflowRepository
 {

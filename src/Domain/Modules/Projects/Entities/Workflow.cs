@@ -1,7 +1,7 @@
 using Shared.Base;
 using Shared.Exceptions;
 
-namespace Domain.Entities;
+namespace Domain.Modules.Projects.Entities;
 
 public class Workflow : BaseEntity
 {

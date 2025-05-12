@@ -1,5 +1,5 @@
-using Domain.Entities;
 using Domain.Factories;
+using Domain.Modules.Projects.Entities;
 
 namespace Infrastructure.Factories;
 
