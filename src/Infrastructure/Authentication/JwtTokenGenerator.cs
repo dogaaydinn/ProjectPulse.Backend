@@ -8,14 +8,9 @@ using Shared.Security;
 
 namespace Infrastructure.Authentication;
 
-public class JwtTokenGenerator : ITokenGenerator
+public class JwtTokenGenerator(IOptions<JwtOptions> options) : ITokenGenerator
 {
-    private readonly JwtOptions _options;
-
-    public JwtTokenGenerator(IOptions<JwtOptions> options)
-    {
-        _options = options.Value;
-    }
+    private readonly JwtOptions _options = options.Value;
 
     public string GenerateAccessToken(Guid userId, string username, string role)
     {

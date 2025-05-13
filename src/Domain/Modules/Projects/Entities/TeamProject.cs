@@ -1,11 +1,11 @@
 using Domain.Modules.Teams.Entities;
 using Shared.Base;
 using Shared.Constants;
-using Shared.Exceptions;
+using Shared.Validation;
 
 namespace Domain.Modules.Projects.Entities;
 
-public class TeamProject : BaseEntity
+public class TeamProject : BaseAuditableEntity
 {
     public Guid TeamId { get; private set; }
     public Team Team { get; private set; } = null!;
@@ -17,21 +17,10 @@ public class TeamProject : BaseEntity
 
     internal TeamProject(Guid teamId, Guid projectId)
     {
-        Validate(teamId, projectId);
+        Guard.AgainstDefaultGuid(teamId, ErrorCodes.Validation, ValidationMessages.TeamProject.TeamIdRequired);
+        Guard.AgainstDefaultGuid(projectId, ErrorCodes.Validation, ValidationMessages.Common.ProjectIdRequired);
+
         TeamId = teamId;
         ProjectId = projectId;
-    }
-
-    private static void Validate(Guid teamId, Guid projectId)
-    {
-        if (teamId == Guid.Empty)
-            throw new AppException(
-                ErrorCodes.Validation,
-                ValidationMessages.TeamProject.TeamIdRequired);
-
-        if (projectId == Guid.Empty)
-            throw new AppException(
-                ErrorCodes.Validation,
-                ValidationMessages.Common.ProjectIdRequired);
     }
 }

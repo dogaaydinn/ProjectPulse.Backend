@@ -7,7 +7,7 @@ public sealed class LocalizedString : ValueObject
 {
     private const string DefaultCulture = "en";
 
-    public Dictionary<string, string> Translations { get; }
+    private Dictionary<string, string> Translations { get; }
 
     private LocalizedString(Dictionary<string, string> translations)
     {
@@ -22,12 +22,10 @@ public sealed class LocalizedString : ValueObject
         return new LocalizedString(translations);
     }
 
-    public string? this[string culture] => 
+    private string? this[string culture] => 
         Translations.TryGetValue(culture, out var value) 
             ? value 
-            : Translations.TryGetValue(DefaultCulture, out var fallback) 
-                ? fallback 
-                : null;
+            : Translations.GetValueOrDefault(DefaultCulture);
 
     public string GetValue(string culture) => 
         this[culture] ?? throw new AppException(
@@ -37,7 +35,7 @@ public sealed class LocalizedString : ValueObject
 
     public string? TryGetValue(string culture) => this[culture];
 
-    public bool IsEmpty() => !Translations.Values.Any(x => !string.IsNullOrWhiteSpace(x));
+    public bool IsEmpty() => Translations.Values.All(string.IsNullOrWhiteSpace);
 
     public override string ToString() => this[DefaultCulture] ?? string.Empty;
 

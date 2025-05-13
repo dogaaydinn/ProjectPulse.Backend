@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Workflow;
 using Shared.Results;
 
 namespace Application.Interfaces;

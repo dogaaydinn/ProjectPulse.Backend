@@ -24,7 +24,7 @@ public class Label : BaseEntity
 
     public void SetName(LocalizedString name)
     {
-        Guard.Against.NullOrEmpty(name, ErrorCodes.Validation, ValidationMessages.Label.NameRequired);
+        Guard.AgainstEmptyLocalized(name, ErrorCodes.Validation, ValidationMessages.Label.NameRequired);
         Name = name;
     }
 

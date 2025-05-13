@@ -1,9 +1,9 @@
-using Domain.Core.ValueObjects;
 using Domain.Modules.Tasks.Entities;
 using Domain.Modules.Tasks.Enums;
 using Shared.Base;
 using Shared.Constants;
 using Shared.Exceptions;
+using Shared.ValueObjects;
 
 namespace Domain.Modules.Projects.Entities;
 

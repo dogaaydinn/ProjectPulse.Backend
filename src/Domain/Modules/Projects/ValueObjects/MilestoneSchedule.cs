@@ -1,7 +1,6 @@
-using Domain.Core.ValueObjects;
 using Shared.Exceptions;
 
-namespace Domain.Modules.Projects.ValueObjects;
+namespace Shared.ValueObjects;
 
 public sealed class MilestoneSchedule : ValueObject
 {
@@ -25,11 +24,11 @@ public sealed class MilestoneSchedule : ValueObject
         EndDate = endDate;
     }
 
+    public bool IsOverdue() => EndDate < DateTime.UtcNow;
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return StartDate;
         yield return EndDate;
     }
-
-    public bool IsOverdue() => EndDate < DateTime.UtcNow;
 }

@@ -1,5 +1,7 @@
+using Domain.Modules.Users.Enums;
 using Shared.Base;
 using Shared.Exceptions;
+using Shared.Validation;
 
 namespace Domain.Modules.Users.Entities;
 
@@ -12,21 +14,21 @@ public class Notification : BaseEntity
     public DateTime CreatedAt { get; private set; }
     public bool IsRead { get; private set; }
 
-    public string? SourceType { get; private set; }  // Optional: "Task", "Projects", etc.
+    public NotificationType? Type { get; private set; }
     public Guid? SourceId { get; private set; }
 
     protected Notification() { }
 
-    public Notification(Guid userId, string message, string? sourceType = null, Guid? sourceId = null)
+    public Notification(Guid userId, string message, NotificationType? type = null, Guid? sourceId = null)
     {
-        if (string.IsNullOrWhiteSpace(message))
-            throw new AppException("Validation.Notification.Message", "Message cannot be empty.");
+        Guard.AgainstDefaultGuid(userId, "Validation.Notification.User", "UserId is required.");
+        Guard.AgainstEmpty(message, "Validation.Notification.Message", "Message cannot be empty.");
 
         UserId = userId;
         Message = message.Trim();
         CreatedAt = DateTime.UtcNow;
         IsRead = false;
-        SourceType = sourceType;
+        Type = type;
         SourceId = sourceId;
     }
 

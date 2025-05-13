@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Comment;
 using Shared.Results;
 
 namespace Application.Interfaces;

@@ -1,10 +1,11 @@
 using Domain.Modules.Users.Entities;
 using Shared.Base;
-using Shared.Exceptions;
+using Shared.Constants;
+using Shared.Validation;
 
 namespace Domain.Modules.Tasks.Entities;
 
-public class TimeLog : BaseEntity
+public class TimeLog : BaseAuditableEntity
 {
     public Guid TaskItemId { get; private set; }
     public TaskItem TaskItem { get; private set; } = null!;
@@ -21,11 +22,9 @@ public class TimeLog : BaseEntity
 
     internal TimeLog(Guid taskItemId, Guid userId, DateTime startTime, DateTime endTime)
     {
-        if (taskItemId == Guid.Empty || userId == Guid.Empty)
-            throw new AppException("Validation.TimeLog.InvalidIds", "Task and User IDs must be valid.");
-
-        if (startTime >= endTime)
-            throw new AppException("Validation.TimeLog.InvalidTimes", "Start time must be before end time.");
+        Guard.AgainstDefaultGuid(taskItemId, ErrorCodes.Validation, ValidationMessages.TimeLog.TaskIdRequired);
+        Guard.AgainstDefaultGuid(userId, ErrorCodes.Validation, ValidationMessages.TimeLog.UserIdRequired);
+        Guard.AgainstInvalidCondition(startTime >= endTime, ErrorCodes.Validation, ValidationMessages.TimeLog.StartTimeMustBeBeforeEndTime);
 
         TaskItemId = taskItemId;
         UserId = userId;
@@ -35,9 +34,7 @@ public class TimeLog : BaseEntity
 
     public void UpdateTime(DateTime newStart, DateTime newEnd)
     {
-        if (newStart >= newEnd)
-            throw new AppException("Validation.TimeLog.InvalidTimes", "Start time must be before end time.");
-
+        Guard.AgainstInvalidCondition(newStart >= newEnd, ErrorCodes.Validation, ValidationMessages.TimeLog.StartTimeMustBeBeforeEndTime);
         StartTime = newStart;
         EndTime = newEnd;
     }
