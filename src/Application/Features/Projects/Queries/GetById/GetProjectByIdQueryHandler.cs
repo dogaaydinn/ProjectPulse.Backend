@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Project;
 using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
@@ -17,8 +18,7 @@ public class GetProjectByIdQueryHandler(IProjectRepository projectRepository)
             project.Id,
             project.Name,
             project.Description,
-            project.StartDate,
-            project.EndDate,
+            project.Schedule,
             project.ManagerId,
             project.Status.ToString(),
             project.Priority.ToString()

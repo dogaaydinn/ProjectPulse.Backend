@@ -1,3 +1,5 @@
+using Application.Common.Handlers;
+using Application.Common.Validation;
 using Domain.Core.Persistence;
 using Domain.Factories;
 using Domain.Modules.Projects.Repositories;
@@ -5,23 +7,39 @@ using Shared.Results;
 
 namespace Application.Features.Projects.Commands.Create;
 
-public class CreateProjectCommandHandler(
-    IProjectRepository projectRepository,
-    IProjectFactory projectFactory,
-    IUnitOfWork unitOfWork)
+public class CreateProjectCommandHandler
+    : BaseCommandHandler<CreateProjectCommand, Guid>
 {
+    private readonly IProjectRepository _projectRepository;
+    private readonly IProjectFactory _projectFactory;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CreateProjectCommandHandler(
+        IProjectRepository projectRepository,
+        IProjectFactory projectFactory,
+        IUnitOfWork unitOfWork,
+        IValidator<CreateProjectCommand> validator)
+        : base(validator)
+    {
+        _projectRepository = projectRepository;
+        _projectFactory = projectFactory;
+        _unitOfWork = unitOfWork;
+    }
+
     public async Task<Result<Guid>> Handle(CreateProjectCommand command, CancellationToken cancellationToken)
     {
-        var project = projectFactory.Create(
-            command.Name,
-            command.Description,
-            command.StartDate,
-            command.EndDate,
-            command.ManagerId);
+        return await ValidateAndExecuteAsync(command, async () =>
+        {
+            var project = _projectFactory.Create(
+                command.Name,
+                command.Description,
+                command.Schedule,
+                command.ManagerId);
 
-        await projectRepository.AddAsync(project);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
+            await _projectRepository.AddAsync(project);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result<Guid>.Success(project.Id);
+            return Result<Guid>.Success(project.Id);
+        });
     }
 }

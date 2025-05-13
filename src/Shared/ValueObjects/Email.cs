@@ -3,7 +3,7 @@ using Shared.Exceptions;
 
 namespace Shared.ValueObjects;
 
-public sealed class Email : ValueObject
+public sealed partial class Email : ValueObject
 {
     public string Value { get; }
 
@@ -12,7 +12,7 @@ public sealed class Email : ValueObject
         if (string.IsNullOrWhiteSpace(value))
             throw new AppException("Validation.Email.Empty", "Email address cannot be empty.");
 
-        if (!Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        if (!MyRegex().IsMatch(value))
             throw new AppException("Validation.Email.Invalid", "Email address is invalid.");
 
         Value = value;
@@ -26,4 +26,6 @@ public sealed class Email : ValueObject
     }
 
     public override string ToString() => Value;
+    [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
+    private static partial Regex MyRegex();
 }

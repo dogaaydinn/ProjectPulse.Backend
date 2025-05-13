@@ -1,6 +1,6 @@
 using Shared.Exceptions;
-using System.Diagnostics.CodeAnalysis;
 using Shared.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Shared.Validation;
 
@@ -15,6 +15,18 @@ public static class Guard
     public static void AgainstNullOrEmpty(string? input, string errorCode, string message)
     {
         if (string.IsNullOrWhiteSpace(input))
+            throw new AppException(errorCode, message);
+    }
+
+    public static void AgainstEmpty(string value, string errorCode, string message)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            throw new AppException(errorCode, message);
+    }
+
+    public static void AgainstEmptyLocalized(LocalizedString? value, string errorCode, string message)
+    {
+        if (value is null || value.IsEmpty())
             throw new AppException(errorCode, message);
     }
 
@@ -43,15 +55,21 @@ public static class Guard
             throw new AppException(errorCode, message);
     }
 
-    public static void AgainstEmpty(string value, string errorCode, string errorMessage)
+    public static void AgainstPastDate(DateTime date, string errorCode, string message)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new AppException(errorCode, errorMessage);
+        if (date < DateTime.UtcNow)
+            throw new AppException(errorCode, message);
     }
 
-    public static void AgainstEmptyLocalized(LocalizedString? value, string errorCode, string errorMessage)
+    public static void AgainstFutureDate(DateTime date, string errorCode, string message)
     {
-        if (value is null || value.IsEmpty())
-            throw new AppException(errorCode, errorMessage);
+        if (date > DateTime.UtcNow)
+            throw new AppException(errorCode, message);
+    }
+
+    public static void AgainstNullOrWhiteSpace(string? input, string errorCode, string message)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+            throw new AppException(errorCode, message);
     }
 }

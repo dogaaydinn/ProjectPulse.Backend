@@ -9,12 +9,13 @@ public class UpdateProjectCommandValidator : IValidator<UpdateProjectCommand>
     {
         var result = new ValidationResult();
 
-        if (string.IsNullOrWhiteSpace(command.Name))
-            result.AddError("Name", ValidationMessages.Project.ProjectNameRequired);
+        result.IfEmptyLocalized(command.Name, nameof(command.Name), ValidationMessages.Project.ProjectNameRequired);
+        result.IfEmptyLocalized(command.Description, nameof(command.Description), ValidationMessages.Project.ProjectDescriptionRequired);
 
-        if (command.ManagerId == Guid.Empty)
-            result.AddError("ManagerId", ValidationMessages.Project.ManagerIdRequired);
-
-        return result;
+        result.IfEmptyGuid(command.ManagerId, nameof(command.ManagerId), ValidationMessages.Project.ManagerIdRequired);
+        
+        return result is { IsValid: true }
+            ? ValidationResult.Success()
+            : result;
     }
 }

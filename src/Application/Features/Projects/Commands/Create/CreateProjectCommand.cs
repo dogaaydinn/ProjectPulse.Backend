@@ -1,8 +1,9 @@
+using Shared.ValueObjects;
+
 namespace Application.Features.Projects.Commands.Create;
 
 public record CreateProjectCommand(
-    string Name,
-    string? Description,
-    DateTime StartDate,
-    DateTime? EndDate,
+    LocalizedString Name,
+    LocalizedString Description,
+    DateRange Schedule,
     Guid ManagerId);

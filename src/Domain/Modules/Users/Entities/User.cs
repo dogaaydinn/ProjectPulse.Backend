@@ -1,4 +1,3 @@
-using Domain.Core.ValueObjects;
 using Domain.Modules.Projects.Entities;
 using Domain.Modules.Tasks.Entities;
 using Domain.Modules.Users.Enums;
@@ -6,6 +5,7 @@ using Shared.Base;
 using Shared.Validation;
 using Shared.Constants;
 using Shared.Security;
+using Shared.ValueObjects;
 
 namespace Domain.Modules.Users.Entities;
 
@@ -15,8 +15,10 @@ public class User : BaseAuditableEntity
     public Email Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = string.Empty;
     public GlobalRole GlobalRole { get; private set; } = GlobalRole.User;
+    public LocalizedString? DisplayName { get; private set; }
 
-    // Navigation Properties
+    public UserPreference Preference { get; private set; } = null!;
+
     public ICollection<Project> ManagedProjects { get; private set; } = new List<Project>();
     public ICollection<TaskItem> AssignedTasks { get; private set; } = new List<TaskItem>();
     public ICollection<TaskItem> ReportedTasks { get; private set; } = new List<TaskItem>();
@@ -39,6 +41,18 @@ public class User : BaseAuditableEntity
         Email = email;
         SetPasswordHash(passwordHash);
         GlobalRole = globalRole;
+    }
+
+    public void SetPreference(UserPreference preference)
+    {
+        Guard.AgainstNull(preference, ErrorCodes.Validation, "User preference is required.");
+        Preference = preference;
+    }
+
+    public void SetDisplayName(LocalizedString displayName)
+    {
+        Guard.AgainstEmptyLocalized(displayName, ErrorCodes.Validation, ValidationMessages.User.DisplayNameRequired);
+        DisplayName = displayName;
     }
 
     private void SetUsername(string username)
@@ -74,4 +88,11 @@ public class User : BaseAuditableEntity
         Guard.AgainstNull(newRole, ErrorCodes.Validation, ValidationMessages.User.InvalidRole);
         GlobalRole = newRole;
     }
+    public void ChangeEmail(Email newEmail)
+    {
+        Guard.AgainstNull(newEmail, ErrorCodes.Validation, ValidationMessages.User.EmailRequired);
+        Email = newEmail;
+    }
+
+    
 }

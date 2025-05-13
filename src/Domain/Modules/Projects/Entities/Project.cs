@@ -1,16 +1,18 @@
-using Domain.Core.ValueObjects;
 using Domain.Modules.Projects.Enums;
 using Domain.Modules.Tasks.Entities;
 using Domain.Modules.Users.Entities;
 using Shared.Base;
 using Shared.Constants;
 using Shared.Exceptions;
+using Shared.Validation;
+using Shared.ValueObjects;
 
 namespace Domain.Modules.Projects.Entities;
 
 public class Project : BaseAuditableEntity
 {
-    public string Name { get; private set; } = string.Empty;
+    public LocalizedString Name { get; private set; } = null!;
+
     public LocalizedString? Description { get; private set; }
     public DateRange Schedule { get; private set; } = null!;
 
@@ -30,7 +32,7 @@ public class Project : BaseAuditableEntity
     protected Project() { }
 
     public Project(
-        string name,
+        LocalizedString name,
         LocalizedString? description,
         DateRange schedule,
         Guid managerId,
@@ -42,19 +44,20 @@ public class Project : BaseAuditableEntity
         SetName(name);
         Description = description;
         Schedule = schedule;
-        AssignManager(managerId);
+        ManagerId = managerId;
         CreatedByUserId = createdByUserId;
         Status = status;
         Priority = priority;
     }
 
-    public void UpdateDetails(string name, LocalizedString? description, ProjectStatus status, ProjectPriority priority)
+    public void UpdateDetails(LocalizedString name, LocalizedString? description, ProjectStatus status, ProjectPriority priority)
     {
         SetName(name);
         Description = description;
         Status = status;
         Priority = priority;
     }
+
 
     public void SetSchedule(DateRange schedule)
     {
@@ -69,11 +72,9 @@ public class Project : BaseAuditableEntity
         ManagerId = managerId;
     }
 
-    private void SetName(string name)
+    private void SetName(LocalizedString name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new AppException(ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
-
-        Name = name.Trim();
+        Guard.AgainstEmptyLocalized(name, ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
+        Name = name;
     }
 }

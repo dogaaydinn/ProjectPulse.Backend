@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Project;
 using AutoMapper;
 using Domain.Modules.Projects.Entities;
 

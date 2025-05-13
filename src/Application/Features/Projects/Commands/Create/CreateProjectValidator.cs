@@ -1,6 +1,7 @@
 using Application.Common.Validation;
 using Shared.Constants;
 
+
 namespace Application.Features.Projects.Commands.Create;
 
 public class CreateProjectValidator : IValidator<CreateProjectCommand>
@@ -9,15 +10,15 @@ public class CreateProjectValidator : IValidator<CreateProjectCommand>
     {
         var result = new ValidationResult();
 
-        if (string.IsNullOrWhiteSpace(request.Name))
-            result.AddError("Name", ValidationMessages.Project.ProjectNameRequired);
+        result.IfEmptyLocalized(request.Name, nameof(request.Name), ValidationMessages.Project.ProjectNameRequired);
+        result.IfNull(request.Schedule, nameof(request.Schedule), ValidationMessages.Common.ScheduleRequired);
+        result.IfTrue(
+            request.Schedule.End < request.Schedule.Start,
+            nameof(request.Schedule),
+            ValidationMessages.Common.StartDateMustBeBeforeEndDate
+        );
+        result.IfEmptyGuid(request.ManagerId, nameof(request.ManagerId), ValidationMessages.Project.ManagerIdRequired);
 
-        if (request.StartDate > (request.EndDate ?? DateTime.MaxValue))
-            result.AddError("StartDate", ValidationMessages.Common.StartDateMustBeBeforeEndDate);
-
-        if (request.ManagerId == Guid.Empty)
-            result.AddError("ManagerId", ValidationMessages.Project.ManagerIdRequired);
-
-        return result;
+        return result.IsValid ? ValidationResult.Success() : result;
     }
 }

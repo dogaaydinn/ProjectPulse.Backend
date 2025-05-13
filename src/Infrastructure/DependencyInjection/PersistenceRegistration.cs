@@ -1,4 +1,3 @@
-using Infrastructure.Persistence;
 using Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

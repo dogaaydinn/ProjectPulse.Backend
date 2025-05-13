@@ -10,10 +10,10 @@ public class Result : IResult
     protected Result(bool isSuccess, List<Error>? errors = null)
     {
         IsSuccess = isSuccess;
-        Errors = errors ?? new();
+        Errors = errors ?? [];
     }
 
     public static Result Success() => new(true);
-    public static Result Failure(Error error) => new(false, new List<Error> { error });
+    public static Result Failure(Error error) => new(false, [error]);
     public static Result Failure(List<Error> errors) => new(false, errors);
 }

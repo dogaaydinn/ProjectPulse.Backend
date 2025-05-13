@@ -1,22 +1,21 @@
 using Domain.Modules.Projects.Entities;
 using Domain.Modules.Projects.Enums;
+using Shared.ValueObjects;
 
 namespace Domain.Factories;
 
 public interface IProjectFactory
 {
     Project Create(
-        string name,
-        string? description,
-        DateTime startDate,
-        DateTime? endDate,
+        LocalizedString name,
+        LocalizedString? description,
+        DateRange schedule,
         Guid managerId);
 
     Project Create(
-        string name,
-        string? description,
-        DateTime startDate,
-        DateTime? endDate,
+        LocalizedString name,
+        LocalizedString? description,
+        DateRange schedule,
         Guid managerId,
         ProjectStatus status,
         ProjectPriority priority);

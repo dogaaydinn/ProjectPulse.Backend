@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Core\Helper\" />
     <Folder Include="Core\Primitives\" />
     <Folder Include="Modules\Users\ValueObjects\" />
   </ItemGroup>
