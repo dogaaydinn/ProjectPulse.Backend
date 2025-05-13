@@ -1,5 +1,6 @@
 using Shared.Exceptions;
 using System.Diagnostics.CodeAnalysis;
+using Shared.ValueObjects;
 
 namespace Shared.Validation;
 

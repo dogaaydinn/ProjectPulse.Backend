@@ -1,6 +1,6 @@
 using Shared.Exceptions;
 
-namespace Domain.Core.ValueObjects;
+namespace Shared.ValueObjects;
 
 public sealed class DateRange : ValueObject
 {

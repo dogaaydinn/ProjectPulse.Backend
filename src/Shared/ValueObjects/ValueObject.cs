@@ -1,4 +1,4 @@
-namespace Domain.Core.ValueObjects;
+namespace Shared.ValueObjects;
 
 public abstract class ValueObject
 {
