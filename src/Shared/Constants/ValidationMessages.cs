@@ -5,36 +5,20 @@ public static class ValidationMessages
     public static class Project
     {
         public const string ProjectNameRequired = "Project name is required.";
-        public const string StartDateRequired = "Start date is required.";
-        public const string EndDateRequired = "End date is required.";
         public const string ManagerIdRequired = "Manager ID is required.";
+        public const string ProjectIdRequired = "Project ID is required.";
+        public const string ProjectDescriptionRequired = "Project description is required.";
     }
     
     public static class Task
     {
         public const string TitleRequired = "Task title is required.";
-        public const string TaskTitleRequired = "Task title is required.";
-        public const string DescriptionRequired = "Task description is required.";
-        public const string AssigneeIdRequired = "Assignee ID is required.";
-        public const string DueDateRequired = "Due date is required.";
-    }
-
-    public static class Comment
-    {
-
-        public const string CommentContentRequired = "Comment content is required.";
-        public const string AuthorIdRequired = "Author ID is required.";
-        public const string TaskIdRequired = "Task ID is required.";
-        
     }
     
     public static class Team
     {
-        public const string NameRequired = "Team name is required.";
-        public const string DescriptionRequired = "Team description is required.";
-        public const string ManagerIdRequired = "Manager ID is required.";
+        public const string TeamNameRequired = "Team name is required.";
     }
-    
     
     public static class TeamProject
     {
@@ -47,6 +31,7 @@ public static class ValidationMessages
         public const string ProjectIdRequired = "Projects ID is required.";
         public const string TaskIdRequired = "Task ID is required.";
         public const string LocalizedStringRequired = "At least one localized value must be provided.";
+        public const string ScheduleRequired = "Schedule is required.";
     }
 
     public static class User
@@ -55,11 +40,12 @@ public static class ValidationMessages
         public const string PasswordHashInvalid = "Password hash is invalid.";
         public const string PasswordHasherNull = "Password hasher cannot be null.";
         public const string InvalidRole = "Invalid role.";
+        public const string DisplayNameRequired = "Display name must not be empty.";
+        public const string EmailRequired = "Email address is required.";
     }
     public static class Email
     {
-        public const string Empty = "Email address cannot be empty.";
-        public const string Invalid = "Email address is invalid.";
+
     }
     
     public static class Status
@@ -71,6 +57,36 @@ public static class ValidationMessages
     public static class Label
     {
         public const string NameRequired = "Label name is required.";
-        public const string ColorFormatInvalid = "Color format is invalid.";
     }
+    
+    public static class Comment
+    {
+        public const string ContentRequired = "Comment content is required.";
+        public const string TaskRequired = "Comment must be associated with a task.";
+        public const string AuthorRequired = "Comment must have an author.";
+        public const string AuthorIdRequired = "Author ID is required.";
+        public const string CommentContentRequired = "Comment content is required.";
+    }
+    
+    public static class Attachment
+    {
+        public const string FileNameRequired = "File name is required.";
+        public const string FilePathRequired = "File path is required.";
+        public const string SizeMustBeGreaterThanZero = "File size must be greater than zero.";
+        public const string TaskIdRequired = "Attachment must be associated with a task.";
+    }
+    public static class TimeLog
+    {
+        public const string TaskIdRequired = "Task ID is required.";
+        public const string UserIdRequired = "User ID is required.";
+        public const string StartTimeMustBeBeforeEndTime = "Start time must be before end time.";
+    }
+    
+    public static class Milestone
+    {
+        public const string NameRequired = "Milestone name is required.";
+        public const string AlreadyCompleted = "Milestone is already completed.";
+    }
+
+
 }

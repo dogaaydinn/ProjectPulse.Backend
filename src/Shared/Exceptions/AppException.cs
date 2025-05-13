@@ -1,11 +1,6 @@
 namespace Shared.Exceptions;
 
-public class AppException : Exception
+public class AppException(string message, string code = "App.Exception") : Exception(message)
 {
-    public string Code { get; }
-
-    public AppException(string message, string code = "App.Exception") : base(message)
-    {
-        Code = code;
-    }
+    public string Code { get; } = code;
 }

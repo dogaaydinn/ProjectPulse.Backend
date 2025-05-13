@@ -3,8 +3,9 @@ namespace Application.Common.Validation;
 public class ValidationResult
 {
     public bool IsValid => Errors.Count == 0;
-    private List<ValidationError> Errors { get; } = [];
 
+    public List<ValidationError> Errors { get; } = []; 
+    
     public void AddError(string propertyName, string message)
     {
         if (!string.IsNullOrWhiteSpace(message))

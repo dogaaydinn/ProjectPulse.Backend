@@ -1,5 +1,6 @@
 using Shared.Base;
 using Shared.Exceptions;
+using Shared.Validation;
 
 namespace Domain.Modules.Projects.Entities;
 
@@ -18,38 +19,29 @@ public class Workflow : BaseEntity
 
     public Workflow(string name, Guid projectId, bool isDefault = false)
     {
-        SetName(name);
+        Guard.AgainstEmpty(name, "Validation.Workflow.Name", "Workflow name is required.");
+        Guard.AgainstDefaultGuid(projectId, "Validation.Workflow.ProjectId", "ProjectId is required.");
+
+        Name = name.Trim();
         ProjectId = projectId;
         IsDefault = isDefault;
         IsActive = true;
     }
 
-    public void Deactivate()
-    {
-        IsActive = false;
-    }
-
-    public void Activate()
-    {
-        IsActive = true;
-    }
-
-    private void SetName(string name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new AppException("Validation.Workflow.Name", "Workflow name is required.");
-        Name = name;
-    }
-
-    public void ToggleDefault(bool isDefault)
-    {
-        IsDefault = isDefault;
-    }
+    public void Deactivate() => IsActive = false;
+    public void Activate() => IsActive = true;
+    public void ToggleDefault(bool isDefault) => IsDefault = isDefault;
 
     public void AddStatus(Status status)
     {
         if (Statuses.Any(s => s.Type == status.Type))
             throw new AppException("Workflow.DuplicateStatus", "Workflow already contains this status.");
         Statuses.Add(status);
+    }
+
+    public void Rename(string newName)
+    {
+        Guard.AgainstEmpty(newName, "Validation.Workflow.Name", "Workflow name is required.");
+        Name = newName.Trim();
     }
 }

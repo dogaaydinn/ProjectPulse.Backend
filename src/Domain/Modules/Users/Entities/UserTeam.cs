@@ -1,4 +1,5 @@
 using Domain.Modules.Teams.Entities;
+using Domain.Modules.Users.Enums;
 using Shared.Base;
 using Shared.Exceptions;
 
@@ -12,12 +13,12 @@ public class UserTeam : BaseEntity
     public Guid TeamId { get; private set; }
     public Team Team { get; private set; } = null!;
 
+    public TeamRole Role { get; private set; } = TeamRole.Member;
     public DateTime JoinedAt { get; private set; }
-    public string? Role { get; private set; } // Optional: "Member", "Admin"
 
     protected UserTeam() { }
 
-    public UserTeam(Guid userId, Guid teamId, string? role = "Member")
+    public UserTeam(Guid userId, Guid teamId, TeamRole role)
     {
         if (userId == Guid.Empty || teamId == Guid.Empty)
             throw new AppException("Validation.UserTeam.Invalid", "User and Team IDs must be valid.");
@@ -28,7 +29,7 @@ public class UserTeam : BaseEntity
         JoinedAt = DateTime.UtcNow;
     }
 
-    public void UpdateRole(string newRole)
+    public void UpdateRole(TeamRole newRole)
     {
         Role = newRole;
     }

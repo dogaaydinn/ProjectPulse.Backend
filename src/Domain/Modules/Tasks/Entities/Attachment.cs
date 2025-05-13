@@ -1,15 +1,15 @@
 using Shared.Base;
-using Shared.Exceptions;
+using Shared.Constants;
+using Shared.Validation;
 
 namespace Domain.Modules.Tasks.Entities;
 
-public class Attachment : BaseEntity
+public class Attachment : BaseAuditableEntity
 {
     public string FileName { get; private set; } = string.Empty;
     public string FilePath { get; private set; } = string.Empty;
     public string ContentType { get; private set; } = string.Empty;
     public long Size { get; private set; }
-    public DateTime UploadedAt { get; private set; }
 
     public Guid TaskItemId { get; private set; }
     public TaskItem TaskItem { get; private set; } = null!;
@@ -22,33 +22,38 @@ public class Attachment : BaseEntity
         SetFilePath(filePath);
         SetContentType(contentType);
         SetSize(size);
+        Guard.AgainstDefaultGuid(taskItemId, ErrorCodes.Validation, ValidationMessages.Attachment.TaskIdRequired);
         TaskItemId = taskItemId;
-        UploadedAt = DateTime.UtcNow;
     }
 
-    private void SetFileName(string name)
+    public void SetFileName(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new AppException("Validation.Attachment.FileName", "File name is required.");
+        Guard.AgainstEmpty(name, ErrorCodes.Validation, ValidationMessages.Attachment.FileNameRequired);
         FileName = name.Trim();
     }
 
-    private void SetFilePath(string path)
+    public void SetFilePath(string path)
     {
-        if (string.IsNullOrWhiteSpace(path))
-            throw new AppException("Validation.Attachment.FilePath", "File path is required.");
-        FilePath = path;
+        Guard.AgainstEmpty(path, ErrorCodes.Validation, ValidationMessages.Attachment.FilePathRequired);
+        FilePath = path.Trim();
     }
 
-    private void SetContentType(string type)
+    public void SetContentType(string? type)
     {
-        ContentType = type ?? "application/octet-stream";
+        ContentType = string.IsNullOrWhiteSpace(type) ? "application/octet-stream" : type.Trim();
     }
 
-    private void SetSize(long size)
+    public void SetSize(long size)
     {
-        if (size <= 0)
-            throw new AppException("Validation.Attachment.Size", "File size must be greater than zero.");
+        Guard.AgainstInvalidCondition(size <= 0, ErrorCodes.Validation, ValidationMessages.Attachment.SizeMustBeGreaterThanZero);
         Size = size;
+    }
+
+    public void UpdateMetadata(string fileName, string filePath, string? contentType, long size)
+    {
+        SetFileName(fileName);
+        SetFilePath(filePath);
+        SetContentType(contentType);
+        SetSize(size);
     }
 }

@@ -7,9 +7,9 @@ public sealed class DateRange : ValueObject
     public DateTime Start { get; }
     public DateTime? End { get; }
 
-    private DateRange(DateTime start, DateTime? end)
+    public DateRange(DateTime start, DateTime? end)
     {
-        if (end.HasValue && end < start)
+        if (end < start)
             throw new AppException("Validation.DateRange.Invalid", "End date must be after start date.");
 
         Start = start;

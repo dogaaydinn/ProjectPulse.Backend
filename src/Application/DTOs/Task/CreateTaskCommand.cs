@@ -1,4 +1,4 @@
-namespace Application.DTOs;
+namespace Application.DTOs.Task;
 
 public record CreateTaskCommand(
     string Title,

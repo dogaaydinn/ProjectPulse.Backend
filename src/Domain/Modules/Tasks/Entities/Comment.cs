@@ -1,13 +1,13 @@
 using Domain.Modules.Users.Entities;
 using Shared.Base;
-using Shared.Exceptions;
+using Shared.Constants;
+using Shared.Validation;
 
 namespace Domain.Modules.Tasks.Entities;
 
-public class Comment : BaseEntity
+public class Comment : BaseAuditableEntity
 {
     public string Content { get; private set; } = string.Empty;
-    public DateTime CreatedAt { get; private set; }
 
     public Guid TaskItemId { get; private set; }
     public TaskItem TaskItem { get; private set; } = null!;
@@ -19,17 +19,17 @@ public class Comment : BaseEntity
 
     public Comment(string content, Guid taskItemId, Guid authorId)
     {
-        UpdateContent(content);
+        SetContent(content);
+        Guard.AgainstDefaultGuid(taskItemId, ErrorCodes.Validation, ValidationMessages.Comment.TaskRequired);
+        Guard.AgainstDefaultGuid(authorId, ErrorCodes.Validation, ValidationMessages.Comment.AuthorRequired);
+
         TaskItemId = taskItemId;
         AuthorId = authorId;
-        CreatedAt = DateTime.UtcNow;
     }
 
-    private void UpdateContent(string content)
+    public void SetContent(string content)
     {
-        if (string.IsNullOrWhiteSpace(content))
-            throw new AppException("Validation.Comment.Content", "Comment cannot be empty.");
-
+        Guard.AgainstEmpty(content, ErrorCodes.Validation, ValidationMessages.Comment.ContentRequired);
         Content = content.Trim();
     }
 }

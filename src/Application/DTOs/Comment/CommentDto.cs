@@ -1,4 +1,4 @@
-namespace Application.DTOs;
+namespace Application.DTOs.Comment;
 
 public record CommentDto(
     Guid Id,
