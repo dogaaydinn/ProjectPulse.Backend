@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Comment;
 using Domain.Modules.Tasks.Repositories;
 using Shared.Results;
 
@@ -14,7 +15,7 @@ public class GetCommentsByTaskIdQueryHandler(ICommentRepository commentRepositor
             .Select(c => new CommentDto(
                 c.Id,
                 c.Content,
-                c.CreatedAt,
+                c.CreatedDate ?? default,
                 c.TaskItemId,
                 c.AuthorId))
             .ToList();

@@ -17,7 +17,7 @@ public class CreateCommentValidator : IValidator<CreateCommentCommand>
 
         if (string.IsNullOrWhiteSpace(request.Content))
             result.AddError("Content", ValidationMessages.Comment.CommentContentRequired);
-
-        return result;
+        
+        return result.IsValid ? ValidationResult.Success() : result;
     }
 }
