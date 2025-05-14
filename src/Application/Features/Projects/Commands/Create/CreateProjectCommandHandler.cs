@@ -7,7 +7,7 @@ using Shared.Results;
 
 namespace Application.Features.Projects.Commands.Create;
 
-public class CreateProjectCommandHandler
+public class CreateProjectCommandHandler 
     : BaseCommandHandler<CreateProjectCommand, Guid>
 {
     private readonly IProjectRepository _projectRepository;
@@ -34,7 +34,9 @@ public class CreateProjectCommandHandler
                 command.Name,
                 command.Description,
                 command.Schedule,
-                command.ManagerId);
+                command.ManagerId,
+                command.Status,
+                command.Priority);
 
             await _projectRepository.AddAsync(project);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -42,4 +44,5 @@ public class CreateProjectCommandHandler
             return Result<Guid>.Success(project.Id);
         });
     }
+
 }

@@ -1,12 +1,13 @@
+using Application.DTOs.Common;
 using Domain.Core.Primitives.Enums.Attributes;
 using Domain.Modules.Tasks.Enums;
 
-namespace Application.DTOs;
+namespace Application.DTOs.Task;
 
 public class CreateTaskRequest
 {
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
+    public LocalizedStringDto Title { get; init; }
+    public LocalizedStringDto? Description { get; init; }
     [StructuredEnumName(typeof(TaskPriority), allowNull: false)]
     public string Priority { get; set; } = TaskPriority.Medium.Name;
     [StructuredEnumName(typeof(TaskType), allowNull: false)]
