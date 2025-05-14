@@ -43,5 +43,10 @@ public static class StructuredEnumHelper
         return success;
     }
     
-
+    public static IEnumerable<TEnum> AllValues<TEnum>()
+        where TEnum : StructuredEnum<TEnum, int>
+    {
+        var method = typeof(TEnum).GetMethod("AllValues", BindingFlags.Public | BindingFlags.Static);
+        return (IEnumerable<TEnum>)method!.Invoke(null, null)!;
+    }
 }
