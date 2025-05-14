@@ -24,6 +24,7 @@ public sealed class DateRange : ValueObject
         yield return Start;
         yield return End;
     }
+    public bool IsEmpty() => Start == default && End == null;
 
     public override string ToString() =>
         End is null ? $"{Start:yyyy-MM-dd}" : $"{Start:yyyy-MM-dd} → {End:yyyy-MM-dd}";

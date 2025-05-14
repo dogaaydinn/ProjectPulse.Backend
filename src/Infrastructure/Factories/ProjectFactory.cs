@@ -2,40 +2,35 @@ using Domain.Factories;
 using Domain.Modules.Projects.Entities;
 using Domain.Modules.Projects.Enums;
 using Shared.Constants;
-using Shared.Exceptions;
+using Shared.Validation;
+using Shared.ValueObjects;
 
 namespace Infrastructure.Factories;
 
 public class ProjectFactory : IProjectFactory
 {
     public Project Create(
-        string name,
-        string? description,
-        DateTime startDate,
-        DateTime? endDate,
+        LocalizedString name,
+        LocalizedString description,
+        DateRange schedule,
         Guid managerId)
     {
-        return Create(name, description, startDate, endDate, managerId, ProjectStatus.Planned, ProjectPriority.Medium);
+        return Create(name, description, schedule, managerId, Guid.NewGuid(), ProjectStatus.Planned, ProjectPriority.Medium);
     }
 
     public Project Create(
-        string name,
-        string? description,
-        DateTime startDate,
-        DateTime? endDate,
+        LocalizedString name,
+        LocalizedString description,
+        DateRange schedule,
         Guid managerId,
-        ProjectStatus projectStatus,
-        ProjectPriority projectPriority)
+        Guid createdByUserId,
+        ProjectStatus status,
+        ProjectPriority priority)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new AppException(ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
+        Guard.AgainstEmptyLocalized(name, ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
+        Guard.AgainstEmptyDateRange(schedule, ErrorCodes.Validation, ValidationMessages.Project.ScheduleRequired);
+        Guard.AgainstDefaultGuid(managerId, ErrorCodes.Validation, ValidationMessages.Project.ManagerIdRequired);
 
-        if (managerId == Guid.Empty)
-            throw new AppException(ErrorCodes.Validation, ValidationMessages.Project.ManagerIdRequired);
-
-        if (endDate < startDate)
-            throw new AppException(ErrorCodes.Validation, ValidationMessages.Common.StartDateMustBeBeforeEndDate);
-
-        return new Project(name, description, startDate, endDate, managerId, projectStatus, projectPriority);
+        return new Project(name, description, schedule, managerId, createdByUserId, status, priority);
     }
 }

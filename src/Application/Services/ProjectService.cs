@@ -1,5 +1,7 @@
+using Application.Common.Validation;
 using Application.DTOs;
 using Application.DTOs.Project;
+using Application.Features.Projects.Commands.Update;
 using Application.Interfaces;
 using Domain.Core.Persistence;
 using Domain.Core.Primitives.Enums.Converters;
@@ -102,41 +104,49 @@ public class ProjectService : IProjectService
     #endregion
 
     #region UpdateProjectAsync
-
     public async Task<Result<ProjectDto>> UpdateProjectAsync(UpdateProjectRequest request)
     {
-        var project = await _projectRepository.GetByIdAsync(request.Id);
-
-        if (project is null)
-            return Result<ProjectDto>.Failure(Error.NotFound("Project", request.Id));
-
-        var statusResult = StructuredEnumConverter.ConvertAsResult<ProjectStatus>(request.Status);
+        var statusResult = request.Status.ConvertAsResult<ProjectStatus>();
         if (statusResult.IsFailure)
             return Result<ProjectDto>.Failure(statusResult.Error);
 
-        var priorityResult = StructuredEnumConverter.ConvertAsResult<ProjectPriority>(request.Priority);
+        var priorityResult = request.Priority.ConvertAsResult<ProjectPriority>();
         if (priorityResult.IsFailure)
             return Result<ProjectDto>.Failure(priorityResult.Error);
 
-        project.UpdateDetails(
+        var command = new UpdateProjectCommand(
+            request.Id,
             request.Name,
             request.Description,
+            request.Schedule,
+            request.ManagerId,
             statusResult.Value,
             priorityResult.Value);
 
-        await _unitOfWork.SaveChangesAsync();
+        var handler = new UpdateProjectCommandHandler(
+            _projectRepository,
+            _unitOfWork,
+            new UpdateProjectCommandValidator());
+
+        var result = await handler.Handle(command, CancellationToken.None);
+        if (result.IsFailure)
+            return Result<ProjectDto>.Failure(result.Error);
+
+        var updated = await _projectRepository.GetByIdAsync(result.Value);
+        if (updated is null)
+            return Result<ProjectDto>.Failure(Error.NotFound("Project", request.Id));
 
         return Result<ProjectDto>.Success(new ProjectDto(
-            project.Id,
-            project.Name,
-            project.Description,
-            project.StartDate,
-            project.EndDate,
-            project.ManagerId,
-            project.Status.Name,
-            project.Priority.Name
+            updated.Id,
+            updated.Name,
+            updated.Description,
+            updated.Schedule,
+            updated.ManagerId,
+            updated.Status.ToString(),
+            updated.Priority.ToString()
         ));
     }
+
     #endregion
 
     #region DeleteProjectAsync

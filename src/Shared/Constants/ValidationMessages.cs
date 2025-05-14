@@ -8,6 +8,7 @@ public static class ValidationMessages
         public const string ManagerIdRequired = "Manager ID is required.";
         public const string ProjectIdRequired = "Project ID is required.";
         public const string ProjectDescriptionRequired = "Project description is required.";
+        public const string ScheduleRequired = "Project schedule is required.";
     }
     
     public static class Task
@@ -32,6 +33,7 @@ public static class ValidationMessages
         public const string TaskIdRequired = "Task ID is required.";
         public const string LocalizedStringRequired = "At least one localized value must be provided.";
         public const string ScheduleRequired = "Schedule is required.";
+        public const string NameRequired = "Name is required.";
     }
 
     public static class User
@@ -42,10 +44,6 @@ public static class ValidationMessages
         public const string InvalidRole = "Invalid role.";
         public const string DisplayNameRequired = "Display name must not be empty.";
         public const string EmailRequired = "Email address is required.";
-    }
-    public static class Email
-    {
-
     }
     
     public static class Status
@@ -68,6 +66,10 @@ public static class ValidationMessages
         public const string CommentContentRequired = "Comment content is required.";
     }
     
+    public static class Enum
+    {
+        public const string InvalidName = "Invalid enum name: {0}.";
+    }
     public static class Attachment
     {
         public const string FileNameRequired = "File name is required.";

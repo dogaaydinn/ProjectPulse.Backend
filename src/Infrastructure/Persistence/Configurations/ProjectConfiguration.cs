@@ -19,12 +19,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(p => p.Description)
             .HasMaxLength(1000);
 
-        builder.OwnsOne(p => p.Schedule, schedule =>
-        {
-            schedule.Property(s => s.StartDate).HasColumnName("StartDate");
-            schedule.Property(s => s.EndDate).HasColumnName("EndDate");
-        });
-
+        // configure schedule 
+        
         builder.HasOne(p => p.Manager)
             .WithMany(u => u.ManagedProjects)
             .HasForeignKey(p => p.ManagerId)

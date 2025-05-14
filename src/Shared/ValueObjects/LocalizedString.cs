@@ -7,7 +7,7 @@ public sealed class LocalizedString : ValueObject
 {
     private const string DefaultCulture = "en";
 
-    private Dictionary<string, string> Translations { get; }
+    public Dictionary<string, string> Translations { get; }
 
     private LocalizedString(Dictionary<string, string> translations)
     {

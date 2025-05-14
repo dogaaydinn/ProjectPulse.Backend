@@ -17,6 +17,7 @@ public interface IProjectFactory
         LocalizedString? description,
         DateRange schedule,
         Guid managerId,
+        Guid createdByUserId,
         ProjectStatus status,
         ProjectPriority priority);
 }

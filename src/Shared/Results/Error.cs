@@ -20,6 +20,8 @@ public class Error(string code, string message)
         return new Error(ErrorCodes.Validation, message);
     }
     
+    public static Error Validation(string code, string message)
+        => new(code, message);
     public static Error Unexpected(string message)
     {
         return new Error(ErrorCodes.Unexpected, message);
