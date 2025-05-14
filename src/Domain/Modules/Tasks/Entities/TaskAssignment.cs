@@ -13,7 +13,8 @@ public class TaskAssignment : BaseEntity
     public Guid UserId { get; private set; }
     public User User { get; private set; } = null!;
 
-    public TaskRole Role { get; private set; }
+    public TaskRole Role { get; private set; } = TaskRole.Assignee;
+
     public DateTime AssignedAt { get; private set; }
 
     protected TaskAssignment() { }

@@ -1,32 +1,34 @@
-using Domain.Core.ValueObjects;
 using Domain.Modules.Projects.Entities;
 using Domain.Modules.Tasks.Enums;
 using Domain.Modules.Users.Entities;
 using Shared.Base;
-using Shared.Exceptions;
+using Shared.Constants;
+using Shared.Validation;
+using Shared.ValueObjects;
 
 namespace Domain.Modules.Tasks.Entities;
 
 public class TaskItem : BaseAuditableEntity
 {
-    public string Title { get; private set; } = string.Empty;
-    public string? Description { get; private set; }
-    public new DateTime CreatedDate { get; private set; }
-
+    public LocalizedString Title { get; private set; } = null!;
+    public LocalizedString? Description { get; private set; }
     public DateRange? Schedule { get; private set; }
     public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
     public TaskType Type { get; private set; } = TaskType.Task;
 
     public Guid ProjectId { get; private set; }
-    public Guid? AssigneeId { get; private set; }
-    public Guid? ReporterId { get; private set; }
-    public Guid? ParentTaskId { get; private set; }
-    public Guid? StatusId { get; private set; }
-
     public Project Project { get; private set; } = null!;
+
+    public Guid? AssigneeId { get; private set; }
     public User? Assignee { get; private set; }
+
+    public Guid? ReporterId { get; private set; }
     public User? Reporter { get; private set; }
+
+    public Guid? ParentTaskId { get; private set; }
     public TaskItem? ParentTask { get; private set; }
+
+    public Guid? StatusId { get; private set; }
     public TaskStatus? Status { get; private set; }
 
     public ICollection<TaskItem> SubTasks { get; private set; } = new List<TaskItem>();
@@ -41,8 +43,8 @@ public class TaskItem : BaseAuditableEntity
     protected TaskItem() { }
 
     public TaskItem(
-        string title,
-        string? description,
+        LocalizedString title,
+        LocalizedString? description,
         TaskPriority priority,
         TaskType type,
         Guid projectId,
@@ -51,65 +53,48 @@ public class TaskItem : BaseAuditableEntity
     {
         SetTitle(title);
         Description = description;
-        //TaskPriority mi olmalı?
         Priority = priority;
         Type = type;
+
+        Guard.AgainstDefaultGuid(projectId, ErrorCodes.Validation, ValidationMessages.Common.ProjectIdRequired);
         ProjectId = projectId;
+
         AssigneeId = assigneeId;
         ReporterId = reporterId;
-        CreatedDate = DateTime.UtcNow;
     }
 
-    public void SetSchedule(DateTime? start, DateTime? end)
+    public void SetTitle(LocalizedString title)
     {
-        if (start.HasValue && end.HasValue && end < start)
-            throw new AppException("Validation.Task.Schedule", "End date cannot be earlier than start date.");
-
-        Schedule = (start != null && end != null)
-            ? DateRange.Create(start.Value, end.Value)
-            : null;
-    }
-    
-    public void UpdateDetails(
-        string title,
-        string? description,
-        TaskPriority priority,
-        TaskType type,
-        DateTime? start,
-        DateTime? end)
-    {
-        SetTitle(title);
-        Description = description;
-        Priority = priority;
-        Type = type;
-        SetSchedule(start, end);
-    }
-
-    public void SetTitle(string title)
-    {
-        if (string.IsNullOrWhiteSpace(title))
-            throw new AppException("Validation.Task.Title", "Task title is required.");
+        Guard.AgainstEmptyLocalized(title, ErrorCodes.Validation, ValidationMessages.Task.TitleRequired);
         Title = title;
     }
 
-    public void AssignTo(Guid? assigneeId)
+    public void SetDescription(LocalizedString? description)
     {
-        AssigneeId = assigneeId;
+        Description = description;
     }
 
-    public void SetReporter(Guid? reporterId)
+    public void SetSchedule(DateRange? schedule)
     {
-        ReporterId = reporterId;
+        Schedule = schedule;
     }
-    
-    public void ChangePriority(TaskPriority priority)
+
+    public void UpdateDetails(
+        LocalizedString title,
+        LocalizedString? description,
+        TaskPriority priority,
+        TaskType type,
+        DateRange? schedule)
     {
+        SetTitle(title);
+        SetDescription(description);
         Priority = priority;
-    }
-    
-    public void ChangeType(TaskType type)
-    {
         Type = type;
+        SetSchedule(schedule);
     }
-    
+
+    public void AssignTo(Guid? assigneeId) => AssigneeId = assigneeId;
+    public void SetReporter(Guid? reporterId) => ReporterId = reporterId;
+    public void ChangePriority(TaskPriority priority) => Priority = priority;
+    public void ChangeType(TaskType type) => Type = type;
 }

@@ -1,9 +1,13 @@
-namespace Application.DTOs;
+using Shared.ValueObjects;
+
+namespace Application.DTOs.Task;
 
 public record TaskDto(
     Guid Id,
-    string Title,
-    string? Description,
+    LocalizedString Title,
+    LocalizedString? Description,
+    
+    
     string TaskPriority,
     string TaskType,
     Guid ProjectId,

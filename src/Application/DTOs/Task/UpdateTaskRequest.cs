@@ -1,7 +1,7 @@
 using Domain.Core.Primitives.Enums.Attributes;
 using Domain.Modules.Tasks.Enums;
 
-namespace Application.DTOs;
+namespace Application.DTOs.Task;
 
 public class UpdateTaskRequest
 {

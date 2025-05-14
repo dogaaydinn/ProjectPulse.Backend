@@ -16,11 +16,7 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.OwnsOne(t => t.Schedule, schedule =>
-        {
-            schedule.Property(s => s.StartDate).HasColumnName("StartDate");
-            schedule.Property(s => s.EndDate).HasColumnName("EndDate");
-        });
+        //configure schedule
 
         builder.HasOne(t => t.Assignee)
             .WithMany(u => u.AssignedTasks)

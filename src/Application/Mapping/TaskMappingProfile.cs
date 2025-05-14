@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Task;
 using AutoMapper;
 using Domain.Modules.Tasks.Entities;
 

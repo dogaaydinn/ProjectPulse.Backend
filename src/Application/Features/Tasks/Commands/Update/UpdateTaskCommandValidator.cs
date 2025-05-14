@@ -1,5 +1,6 @@
 using Application.Common.Validation;
 using Application.DTOs;
+using Application.DTOs.Task;
 using Shared.Constants;
 
 namespace Application.Features.Tasks.Commands.Update;

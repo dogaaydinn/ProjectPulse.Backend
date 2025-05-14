@@ -1,9 +1,11 @@
-namespace Application.DTOs;
+using Shared.ValueObjects;
+
+namespace Application.DTOs.Task;
 
 public record UpdateTaskCommand(
     Guid Id,
-    string Title,
-    string? Description,
+    LocalizedString Title,
+    
     string Priority,
     string Type,
     Guid ProjectId,

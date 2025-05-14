@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Task;
 using Application.Interfaces;
 using Domain.Core.Persistence;
 using Domain.Factories;

@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Task;
 using Domain.Modules.Tasks.Repositories;
 using Shared.Results;
 

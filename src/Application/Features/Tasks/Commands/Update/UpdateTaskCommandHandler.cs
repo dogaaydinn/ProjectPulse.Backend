@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.DTOs.Task;
 using Domain.Core.Persistence;
 using Domain.Modules.Tasks.Enums;
 using Domain.Modules.Tasks.Repositories;

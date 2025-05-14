@@ -1,13 +1,14 @@
 using Domain.Modules.Tasks.Entities;
 using Domain.Modules.Tasks.Enums;
+using Shared.ValueObjects;
 
 namespace Infrastructure.Factories;
 
 public class TaskFactory
 {
     public TaskItem Create(
-        string title,
-        string? description,
+        LocalizedString title,
+        LocalizedString description,
         TaskPriority priority,
         TaskType type,
         Guid projectId,
@@ -18,8 +19,8 @@ public class TaskFactory
     }
 
     public TaskItem Create(
-        string title,
-        string? description,
+        LocalizedString title,
+        LocalizedString description,
         string priorityName,
         string typeName,
         Guid projectId,

@@ -3,12 +3,11 @@ using Application.Common.Validation;
 using Domain.Core.Persistence;
 using Domain.Modules.Projects.Repositories;
 using Shared.Results;
-using Shared.ValueObjects;
 
 namespace Application.Features.Projects.Commands.Update;
 
 public class UpdateProjectCommandHandler 
-    : BaseCommandHandler<UpdateProjectCommand, Result>
+    : BaseCommandHandler<UpdateProjectCommand, Guid>
 {
     private readonly IProjectRepository _projectRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -23,22 +22,26 @@ public class UpdateProjectCommandHandler
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(UpdateProjectCommand command, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(UpdateProjectCommand command, CancellationToken cancellationToken)
     {
         return await ValidateAndExecuteAsync(command, async () =>
         {
             var project = await _projectRepository.GetByIdAsync(command.Id);
             if (project is null)
-                return Result.Failure(Error.NotFound(nameof(project), command.Id));
+                return Result<Guid>.Failure(Error.NotFound("Project", command.Id));
 
-            var schedule = new DateRange(command.Schedule.Start, command.Schedule.End);
-            project.UpdateDetails(command.Name, command.Description, command.Status, command.Priority);
-            project.SetSchedule(schedule);
+            project.UpdateDetails(
+                command.Name,
+                command.Description,
+                command.Status,
+                command.Priority);
+
+            project.SetSchedule(command.Schedule);
             project.AssignManager(command.ManagerId);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+
+            return Result<Guid>.Success(project.Id);
         });
     }
-
 }
