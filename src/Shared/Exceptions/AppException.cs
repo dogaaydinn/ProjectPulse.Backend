@@ -1,6 +1,20 @@
+using Shared.Results;
+
 namespace Shared.Exceptions;
 
-public class AppException(string message, string code = "App.Exception") : Exception(message)
+public class AppException : Exception
 {
-    public string Code { get; } = code;
+    public string Code { get; }
+
+    public AppException(Error error)
+        : base(error.Message)
+    {
+        Code = error.Code;
+    }
+
+    public AppException(string code, string message)
+        : base(message)
+    {
+        Code = code;
+    }
 }

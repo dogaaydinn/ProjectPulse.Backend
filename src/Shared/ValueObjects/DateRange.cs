@@ -1,4 +1,5 @@
 using Shared.Exceptions;
+using Shared.Results.Errors;
 
 namespace Shared.ValueObjects;
 
@@ -10,7 +11,7 @@ public sealed class DateRange : ValueObject
     public DateRange(DateTime start, DateTime? end)
     {
         if (end < start)
-            throw new AppException("Validation.DateRange.Invalid", "End date must be after start date.");
+            throw new AppException(ProjectErrors.NameRequired());
 
         Start = start;
         End = end;
