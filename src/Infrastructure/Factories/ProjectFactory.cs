@@ -1,9 +1,10 @@
 using Domain.Factories;
 using Domain.Modules.Projects.Entities;
 using Domain.Modules.Projects.Enums;
-using Shared.Constants;
-using Shared.Validation;
+using Domain.Modules.Projects.Models;
 using Shared.ValueObjects;
+using Shared.Validation;
+using Shared.Results.Errors; 
 
 namespace Infrastructure.Factories;
 
@@ -27,10 +28,29 @@ public class ProjectFactory : IProjectFactory
         ProjectStatus status,
         ProjectPriority priority)
     {
-        Guard.AgainstEmptyLocalized(name, ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
-        Guard.AgainstEmptyDateRange(schedule, ErrorCodes.Validation, ValidationMessages.Project.ScheduleRequired);
-        Guard.AgainstDefaultGuid(managerId, ErrorCodes.Validation, ValidationMessages.Project.ManagerIdRequired);
+        Guard.AgainstEmptyLocalized(name, ProjectErrors.NameRequired);
+        Guard.AgainstEmptyDateRange(schedule, ProjectErrors.ScheduleRequired);
+        Guard.AgainstDefaultGuid(managerId, ProjectErrors.ManagerIdRequired);
+        Guard.AgainstDefaultGuid(createdByUserId, ProjectErrors.CreatedByRequired);
 
         return new Project(name, description, schedule, managerId, createdByUserId, status, priority);
+    }
+
+    public Project Create(CreateProjectModel model)
+    {
+        Guard.AgainstNull(model, ProjectErrors.ModelRequired);
+        Guard.AgainstEmptyLocalized(model.Name, ProjectErrors.NameRequired);
+        Guard.AgainstEmptyDateRange(model.Schedule, ProjectErrors.ScheduleRequired);
+        Guard.AgainstDefaultGuid(model.ManagerId, ProjectErrors.ManagerIdRequired);
+        Guard.AgainstDefaultGuid(model.CreatedByUserId, ProjectErrors.CreatedByRequired);
+
+        return new Project(
+            model.Name,
+            model.Description,
+            model.Schedule,
+            model.ManagerId,
+            model.CreatedByUserId,
+            model.Status,
+            model.Priority);
     }
 }

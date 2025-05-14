@@ -1,5 +1,6 @@
 using Domain.Modules.Projects.Entities;
 using Domain.Modules.Projects.Enums;
+using Domain.Modules.Projects.Models;
 using Shared.ValueObjects;
 
 namespace Domain.Factories;
@@ -20,4 +21,6 @@ public interface IProjectFactory
         Guid createdByUserId,
         ProjectStatus status,
         ProjectPriority priority);
+
+    Project Create(CreateProjectModel model); 
 }
