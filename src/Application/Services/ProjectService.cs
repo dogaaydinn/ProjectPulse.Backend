@@ -1,10 +1,8 @@
 using Application.Common.Validation;
-using Application.DTOs;
 using Application.DTOs.Project;
 using Application.Features.Projects.Commands.Update;
 using Application.Interfaces;
 using Domain.Core.Persistence;
-using Domain.Core.Primitives.Enums.Converters;
 using Domain.Factories;
 using Domain.Modules.Projects.Enums;
 using Domain.Modules.Projects.Repositories;

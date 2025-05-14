@@ -5,7 +5,7 @@ public class ValidationError
     public string PropertyName { get;  }
     public string ErrorMessage { get; }
 
-    private ValidationError(string propertyName, string errorMessage)
+    internal ValidationError(string propertyName, string errorMessage)
     {
         PropertyName = propertyName;
         ErrorMessage = errorMessage;
