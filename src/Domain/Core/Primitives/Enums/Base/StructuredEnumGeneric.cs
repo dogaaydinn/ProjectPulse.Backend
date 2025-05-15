@@ -29,7 +29,7 @@ public abstract class StructuredEnum<TEnum, TValue> : IStructuredEnum
 
     public string Name { get; }
     public TValue Value { get; init; }
-    public static IReadOnlyList<TEnum> AllValues => _allValues.Value;
+    private static IReadOnlyList<TEnum> AllValues => _allValues.Value;
 
     public override string ToString() => Name;
 

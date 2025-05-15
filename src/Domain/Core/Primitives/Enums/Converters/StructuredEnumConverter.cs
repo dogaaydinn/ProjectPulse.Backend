@@ -12,9 +12,6 @@ public static class StructuredEnumConverter
             return Result<TEnum>.Failure(ErrorFactory.EnumRequired(fieldName));
 
         var success = StructuredEnumHelper.TryFromName<TEnum>(name!, out var result);
-        if (!success)
-            return Result<TEnum>.Failure(ErrorFactory.EnumInvalid(fieldName, StructuredEnumHelper.AllValues<TEnum>().Select(e => e.Name)));
-
-        return Result<TEnum>.Success(result!);
+        return !success ? Result<TEnum>.Failure(ErrorFactory.EnumInvalid(fieldName, StructuredEnumHelper.AllValues<TEnum>().Select(e => e.Name))) : Result<TEnum>.Success(result!);
     }
 }

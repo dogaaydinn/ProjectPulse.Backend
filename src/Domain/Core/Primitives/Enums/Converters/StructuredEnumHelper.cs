@@ -9,7 +9,7 @@ public static class StructuredEnumHelper
         where TEnum : StructuredEnum<TEnum, int>
     {
         var method = typeof(TEnum).GetMethod("FromName", BindingFlags.Public | BindingFlags.Static);
-        return (TEnum)method!.Invoke(null, new object[] { name })!;
+        return (TEnum)method!.Invoke(null, [name])!;
     }
 
     public static bool TryFromName<TEnum>(string name, out TEnum? result)
@@ -28,7 +28,7 @@ public static class StructuredEnumHelper
         where TEnum : StructuredEnum<TEnum, int>
     {
         var method = typeof(TEnum).GetMethod("FromValue", BindingFlags.Public | BindingFlags.Static);
-        return (TEnum)method!.Invoke(null, new object[] { value })!;
+        return (TEnum)method!.Invoke(null, [value])!;
     }
 
     public static bool TryFromValue<TEnum>(int value, out TEnum? result)

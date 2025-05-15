@@ -1,9 +1,8 @@
-using Application.DTOs;
 using Application.DTOs.Task;
 using AutoMapper;
 using Domain.Modules.Tasks.Entities;
 
-namespace Application.Mapping;
+namespace Application.Common.Mapping.AutoMapperProfiles;
 
 public class TaskMappingProfile : Profile
 {
