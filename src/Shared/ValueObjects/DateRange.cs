@@ -8,10 +8,13 @@ public sealed class DateRange : ValueObject
     public DateTime Start { get; }
     public DateTime? End { get; }
 
-    public DateRange(DateTime start, DateTime? end)
+    private DateRange(DateTime start, DateTime? end)
     {
         if (end < start)
-            throw new AppException(ProjectErrors.NameRequired());
+            throw new AppException(
+                ProjectErrors.InvalidSchedule(start, end)
+            );
+
 
         Start = start;
         End = end;

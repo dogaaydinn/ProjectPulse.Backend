@@ -1,18 +1,15 @@
-using Shared.Events;
-
 namespace Shared.Base;
 
-public abstract class BaseEntity : IEntity
+public abstract class Entity<TId> : IEntity<TId> where TId : notnull
 {
-    public Guid Id { get; protected set; } = Guid.NewGuid();
+    public TId Id { get; protected set; } = default!;
+    public int Version { get; protected set; }
 
-    private readonly List<IDomainEvent> _domainEvents = new();
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    protected Entity(TId id) => Id = id;
+    
+}
 
-    protected void AddDomainEvent(IDomainEvent domainEvent)
-    {
-        _domainEvents.Add(domainEvent);
-    }
-
-    public void ClearDomainEvents() => _domainEvents.Clear();
+public abstract class Entity : Entity<Guid>, IEntity
+{
+    protected Entity() : base(Guid.NewGuid()) { }
 }

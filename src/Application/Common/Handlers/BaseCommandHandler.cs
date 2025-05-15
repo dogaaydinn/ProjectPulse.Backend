@@ -3,34 +3,44 @@ using Shared.Results;
 
 namespace Application.Common.Handlers;
 
-public abstract class BaseCommandHandler<TRequest, TResponse>
+public abstract class BaseCommandHandler<TRequest, TResponse>(IValidator<TRequest> validator)
 {
-    private readonly IValidator<TRequest> _validator;
-
-    protected BaseCommandHandler(IValidator<TRequest> validator)
-    {
-        _validator = validator;
-    }
-
+    // ✅ Main execution entry for commands with validation and result<T>
     protected async Task<Result<TResponse>> ValidateAndExecuteAsync(
         TRequest request,
         Func<Task<Result<TResponse>>> execute)
     {
-        var validation = _validator.Validate(request);
+        var validation = validator.Validate(request);
         if (!validation.IsValid)
             return Result<TResponse>.Failure(validation.ToErrorList());
 
-        return await execute();
+        return await TryExecuteAsync(execute);
+    }
+    
+
+    // ✅ Error-safe execution for Result<TResponse>
+    private async Task<Result<TResponse>> TryExecuteAsync(Func<Task<Result<TResponse>>> action)
+    {
+        try
+        {
+            return await action();
+        }
+        catch (Exception ex)
+        {
+            return Result<TResponse>.Failure(ErrorFactory.Unexpected($"Execution failed: {ex.Message}"));
+        }
     }
 
-    protected async Task<Result> ValidateAndExecuteAsync(
-        TRequest request,
-        Func<Task<Result>> execute)
+    // ✅ Error-safe execution for Result (non-generic)
+    protected async Task<Result> TryExecuteAsync(Func<Task<Result>> action)
     {
-        var validation = _validator.Validate(request);
-        if (!validation.IsValid)
-            return Result.Failure(validation.ToErrorList());
-
-        return await execute();
+        try
+        {
+            return await action();
+        }
+        catch (Exception ex)
+        {
+            return Result.Failure(ErrorFactory.Unexpected($"Execution failed: {ex.Message}"));
+        }
     }
 }

@@ -2,8 +2,8 @@ using Domain.Modules.Projects.Enums;
 using Domain.Modules.Tasks.Entities;
 using Domain.Modules.Users.Entities;
 using Shared.Base;
-using Shared.Constants;
 using Shared.Exceptions;
+using Shared.Results.Errors;
 using Shared.Validation;
 using Shared.ValueObjects;
 
@@ -12,10 +12,8 @@ namespace Domain.Modules.Projects.Entities;
 public class Project : BaseAuditableEntity
 {
     public LocalizedString Name { get; private set; } = null!;
-
     public LocalizedString? Description { get; private set; }
     public DateRange Schedule { get; private set; } = null!;
-
     public ProjectStatus Status { get; private set; } = ProjectStatus.Planned;
     public ProjectPriority Priority { get; private set; } = ProjectPriority.Medium;
 
@@ -41,40 +39,64 @@ public class Project : BaseAuditableEntity
         ProjectPriority priority = default
     )
     {
+
+
+        Ensure.NotDefault(managerId, ProjectErrors.ManagerIdRequired);
+        Ensure.NotDefault(createdByUserId, ProjectErrors.CreatedByRequired);
+
         SetName(name);
-        Description = description;
-        Schedule = schedule;
-        ManagerId = managerId;
-        CreatedByUserId = createdByUserId;
+        SetDescription(description);
+        SetSchedule(schedule);
+        AssignManager(managerId);
+
+        CreatedByUserId = Guard.AgainstDefaultGuidReturn(createdByUserId, ProjectErrors.CreatedByRequired);
+
         Status = status;
         Priority = priority;
     }
 
-    public void UpdateDetails(LocalizedString name, LocalizedString? description, ProjectStatus status, ProjectPriority priority)
+
+    public void Update(
+        LocalizedString name,
+        LocalizedString? description,
+        DateRange schedule,
+        Guid managerId,
+        ProjectStatus status,
+        ProjectPriority priority)
     {
-        SetName(name);
+        Ensure.NotEmpty(name, ProjectErrors.NameRequired);
+        Ensure.NotEmpty(schedule, ProjectErrors.ScheduleRequired);
+        Ensure.NotDefault(managerId, ProjectErrors.ManagerIdRequired);
+
+        Name = name;
         Description = description;
+        Schedule = schedule;
+        ManagerId = managerId;
         Status = status;
         Priority = priority;
-    }
-
-
-    public void SetSchedule(DateRange schedule)
-    {
-        Schedule = schedule;
-    }
-
-    public void AssignManager(Guid managerId)
-    {
-        if (managerId == Guid.Empty)
-            throw new AppException(ErrorCodes.Validation, ValidationMessages.Project.ManagerIdRequired);
-
-        ManagerId = managerId;
     }
 
     private void SetName(LocalizedString name)
     {
-        Guard.AgainstEmptyLocalized(name, ErrorCodes.Validation, ValidationMessages.Project.ProjectNameRequired);
+        Ensure.NotEmptyLocalized(name, ProjectErrors.NameRequired);
         Name = name;
+    }
+
+    private void SetDescription(LocalizedString? description)
+    {
+        if (description is not null && description.IsEmpty())
+            throw new AppException(ProjectErrors.DescriptionTooLong(1000)); 
+        Description = description;
+    }
+
+    private void SetSchedule(DateRange schedule)
+    {
+        Ensure.NotEmptyDateRange(schedule, ProjectErrors.ScheduleRequired);
+        Schedule = schedule;
+    }
+
+    private void AssignManager(Guid managerId)
+    {
+        ManagerId = EnsureNotDefaultGuid(managerId, ProjectErrors.ManagerIdRequired);
     }
 }

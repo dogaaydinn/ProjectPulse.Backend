@@ -1,6 +1,7 @@
 using Application.Common.Handlers;
 using Application.Common.Validation;
 using Domain.Core.Persistence;
+using Domain.Modules.Projects.Models;
 using Domain.Modules.Projects.Repositories;
 using Shared.Results;
 
@@ -28,20 +29,21 @@ public class UpdateProjectCommandHandler
         {
             var project = await _projectRepository.GetByIdAsync(command.Id);
             if (project is null)
-                return Result<Guid>.Failure(Error.NotFound("Project", command.Id));
+                return Result<Guid>.Failure(ErrorFactory.NotFound("Project", command.Id));
 
-            project.UpdateDetails(
+            project.Update(new UpdateProjectModel(
+                command.Id,
                 command.Name,
                 command.Description,
+                command.Schedule,
+                command.ManagerId,
                 command.Status,
-                command.Priority);
-
-            project.SetSchedule(command.Schedule);
-            project.AssignManager(command.ManagerId);
+                command.Priority
+            ));
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-
             return Result<Guid>.Success(project.Id);
         });
     }
+
 }

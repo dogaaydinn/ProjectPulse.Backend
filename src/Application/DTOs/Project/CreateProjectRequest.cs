@@ -1,19 +1,15 @@
-using Domain.Core.Primitives.Enums.Attributes;
+using Application.DTOs.Common;
+using Application.DTOs.Project.Interfaces;
 using Domain.Modules.Projects.Enums;
-using Shared.ValueObjects;
 
 namespace Application.DTOs.Project;
 
-public class CreateProjectRequest
+public class CreateProjectRequest : IProjectCreateRequest
 {
-    public LocalizedString Name { get; set; } 
-    public LocalizedString Description { get; set; } 
-    public DateRange Schedule { get; set; } 
-    public Guid ManagerId { get; set; }
- 
-    [StructuredEnumName(typeof(ProjectStatus), allowNull: false)]
+    public required LocalizedStringDto Name { get; init; }
+    public LocalizedStringDto? Description { get; init; }
+    public required DateRangeDto Schedule { get; init; }
+    public required Guid ManagerId { get; init; }
     public string Status { get; set; } = ProjectStatus.Planned.Name;
-
-    [StructuredEnumName(typeof(ProjectPriority), allowNull: false)]
     public string Priority { get; set; } = ProjectPriority.Medium.Name;
 }
