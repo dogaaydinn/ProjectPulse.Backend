@@ -1,11 +1,12 @@
 using Shared.Exceptions;
+using Shared.ValueObjects;
 
-namespace Shared.ValueObjects;
+namespace Domain.Modules.Projects.ValueObjects;
 
 public sealed class MilestoneSchedule : ValueObject
 {
-    public DateTime StartDate { get; }
-    public DateTime EndDate { get; }
+    private DateTime StartDate { get; }
+    private DateTime EndDate { get; }
 
     private MilestoneSchedule() { }
 

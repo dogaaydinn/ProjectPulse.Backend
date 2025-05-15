@@ -57,7 +57,7 @@ public class User : BaseAuditableEntity
 
     private void SetUsername(string username)
     {
-        Guard.AgainstNullOrEmpty(username, ErrorCodes.Validation, ValidationMessages.User.UsernameRequired);
+        Guard.EnsureNotNullOrWhiteSpace(username, ErrorCodes.Validation, ValidationMessages.User.UsernameRequired);
         Username = username.Trim();
     }
 

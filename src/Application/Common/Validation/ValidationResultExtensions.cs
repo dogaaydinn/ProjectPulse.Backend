@@ -39,9 +39,10 @@ public static class ValidationResultExtensions
         if (value is null || value.IsEmpty())
             result.Add(errorFactory());
     }
-    public static void IfEndBeforeStart(this ValidationResult result, DateRange range, Func<Error> errorFactory)
+    
+    public static void IfEndBeforeStart(this ValidationResult result, DateTime start, DateTime? end, Func<Error> errorFactory)
     {
-        if (range.End.HasValue && range.End.Value < range.Start)
+        if (end.HasValue && end.Value < start)
             result.Add(errorFactory());
     }
 

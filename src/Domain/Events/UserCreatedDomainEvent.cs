@@ -2,15 +2,9 @@ using Shared.Events;
 
 namespace Domain.Events;
 
-public sealed class UserCreatedDomainEvent : IDomainEvent
+public sealed class UserCreatedDomainEvent(Guid userId, DateTime occurredOn) : IDomainEvent
 {
-    public Guid UserId { get; }
+    public Guid UserId { get; } = userId;
 
-    public UserCreatedDomainEvent(Guid userId, DateTime occurredOn)
-    {
-        UserId = userId;
-        OccurredOn = occurredOn;
-    }
-
-    public DateTime OccurredOn { get; }
+    public DateTime OccurredOn { get; } = occurredOn;
 }

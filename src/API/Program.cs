@@ -1,5 +1,5 @@
 using API.Middleware;
-using Application.Mapping;
+using Application.Common.Mapping.AutoMapperProfiles;
 using Infrastructure.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);

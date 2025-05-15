@@ -35,7 +35,7 @@ public class UserPreference : BaseEntity
 
     public void SetTimeZone(string timeZone)
     {
-        Guard.AgainstNullOrEmpty(timeZone, "Validation.UserPreference.TimeZone", "Time zone cannot be empty.");
+        Guard.EnsureNotNullOrWhiteSpace(timeZone, "Validation.UserPreference.TimeZone", "Time zone cannot be empty.");
         TimeZone = timeZone;
     }
 
