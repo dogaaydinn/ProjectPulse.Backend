@@ -1,7 +1,7 @@
 using Application.DTOs.Common;
 using Shared.ValueObjects;
 
-namespace Application.Mapping;
+namespace Application.Common.Mapping.Mappers;
 
 public static class LocalizedStringMapper
 {
@@ -27,8 +27,13 @@ public static class LocalizedStringMapper
     {
         ArgumentNullException.ThrowIfNull(localized);
 
+        localized.Translations.TryGetValue("en", out var en);
+        localized.Translations.TryGetValue("tr", out var tr);
+
         return new LocalizedStringDto
         {
-            Translations = localized.Translations.ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+            En = en,
+            Tr = tr
         };
+    }
 }
