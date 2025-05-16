@@ -1,6 +1,7 @@
 namespace Shared.Base;
 
-public interface IEntity
+public interface IEntity<out TId>
 {
-    Guid Id { get; }
+    TId Id { get; }
+    int Version { get; }
 }
