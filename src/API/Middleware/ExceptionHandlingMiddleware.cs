@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using Shared.Constants;
 using Shared.Exceptions;
 
@@ -16,32 +17,46 @@ public class ExceptionHandlingMiddleware
         _logger = logger;
     }
 
-    public async Task Invoke(HttpContext context)
+    public async Task InvokeAsync(HttpContext context)
     {
         try
         {
             await _next(context);
         }
-        catch (ValidationException ex) 
-        
-        {
-            _logger.LogWarning(ex, "Validation failed.");
-            await HandleExceptionAsync(context, ex.Message, ErrorCodes.Validation, HttpStatusCode.BadRequest);
-        }
-        catch (AppException ex)
-        {
-            _logger.LogWarning(ex, "Domain validation error occurred.");
-            await HandleExceptionAsync(context, ex.Message, ErrorCodes.Validation, HttpStatusCode.BadRequest);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            _logger.LogWarning(ex, "Unauthorized access.");
-            await HandleExceptionAsync(context, ex.Message, "Error.Unauthorized", HttpStatusCode.Unauthorized);
-        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception occurred.");
-            await HandleExceptionAsync(context, "An unexpected error occurred.", ErrorCodes.Unexpected, HttpStatusCode.InternalServerError);
+            _logger.LogError(ex, "Unhandled exception");
+            var problem = ex switch
+            {
+                ValidationException ve => new ProblemDetails
+                {
+                    Title = "Validation Error",
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Detail = ve.Message
+                },
+                AppException ae => new ProblemDetails
+                {
+                    Title = "Application Error",
+                    Status = (int)HttpStatusCode.BadRequest,
+                    Detail = ae.Message
+                },
+                UnauthorizedAccessException => new ProblemDetails
+                {
+                    Title = "Unauthorized",
+                    Status = (int)HttpStatusCode.Unauthorized,
+                    Detail = "Access is denied."
+                },
+                _ => new ProblemDetails
+                {
+                    Title = "Server Error",
+                    Status = (int)HttpStatusCode.InternalServerError,
+                    Detail = "An unexpected error occurred."
+                }
+            };
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = problem.Status ?? (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsJsonAsync(problem);
         }
     }
 
