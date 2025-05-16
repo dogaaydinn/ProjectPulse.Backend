@@ -1,6 +1,6 @@
 namespace Shared.Primitives;
-
-public readonly struct Unit
+public readonly record struct Unit 
 {
-    public static readonly Unit Value = new();
+    public static readonly Unit Value = default;
+    public static readonly Task<Unit> Task = System.Threading.Tasks.Task.FromResult(Value);
 }

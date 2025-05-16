@@ -2,19 +2,26 @@ using Shared.Results;
 
 namespace Shared.Exceptions;
 
-public class AppException : Exception
+public class AppException(
+    string code,
+    string message,
+    string? details = null,
+    Dictionary<string, object>? metadata = null)
+    : Exception(message)
 {
-    public string Code { get; }
+    private string Code { get; } = code;
+    private string? Details { get; } = details;
+    private IReadOnlyDictionary<string, object> Metadata { get; } = metadata ?? new Dictionary<string, object>();
 
     public AppException(Error error)
-        : base(error.Message)
-    {
-        Code = error.Code;
-    }
+        : this(error.Code, error.Message, null, new Dictionary<string, object>(error.Metadata)) { }
 
-    public AppException(string code, string message)
-        : base(message)
+    protected AppException WithMetadata(string key, object value)
     {
-        Code = code;
+        var updated = new Dictionary<string, object>(Metadata)
+        {
+            [key] = value
+        };
+        return new AppException(Code, Message, Details, updated);
     }
 }

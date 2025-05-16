@@ -1,66 +1,59 @@
 using Shared.Exceptions;
 using Shared.Results;
 using Shared.Time;
-using Shared.ValueObjects;
 
 namespace Shared.Validation;
 
-public static partial class Guard
+public static class Guard
 {
-    public static Guid EnsureNotEmptyGuid(Guid id, Func<Error> errorFactory)
-    {
-        if (id == Guid.Empty)
-            throw new AppException(errorFactory());
-        return id;
-    }
-
-    public static string EnsureNotNullOrWhiteSpace(string? value, Func<Error> errorFactory)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new AppException(errorFactory());
-        return value;
-    }
-
-    public static T EnsureNotNull<T>(T? value, Func<Error> errorFactory)
+    public static void AgainstNull<T>(T? value, Func<Error> errorFactory)
     {
         if (value is null)
             throw new AppException(errorFactory());
-        return value;
     }
 
-    public static LocalizedString EnsureNotEmptyLocalized(LocalizedString? value, Func<Error> errorFactory)
+    public static void AgainstNullOrWhiteSpace(string? value, Func<Error> errorFactory)
     {
-        if (value is null || value.IsEmpty())
+        if (string.IsNullOrWhiteSpace(value))
             throw new AppException(errorFactory());
-        return value;
     }
 
-    public static DateRange EnsureNotEmptyDateRange(DateRange? value, Func<Error> errorFactory)
+    public static void AgainstDefaultGuid(Guid id, Func<Error> errorFactory)
     {
-        if (value is null || value.IsEmpty())
+        if (id == Guid.Empty)
             throw new AppException(errorFactory());
-        return value;
     }
 
-    public static T EnsureInRange<T>(T value, T min, T max, Func<Error> errorFactory)
-        where T : IComparable<T>
+    public static void InRangeOf<T>(T value, T min, T max, Func<Error> errorFactory) where T : IComparable<T>
     {
         if (value.CompareTo(min) < 0 || value.CompareTo(max) > 0)
             throw new AppException(errorFactory());
-        return value;
     }
 
-    public static DateTime EnsureNotPast(DateTime value, IDateTimeProvider clock, Func<Error> errorFactory)
+    public static void AgainstPastDate(DateTime value, IClock clock, Func<Error> errorFactory)
     {
         if (value < clock.UtcNow)
             throw new AppException(errorFactory());
-        return value;
     }
 
-    public static DateTime EnsureNotFuture(DateTime value, IDateTimeProvider clock, Func<Error> errorFactory)
+    public static void AgainstFutureDate(DateTime value, IClock clock, Func<Error> errorFactory)
     {
         if (value > clock.UtcNow)
             throw new AppException(errorFactory());
-        return value;
+    }
+
+    public static void Unless(bool condition, Func<Error> errorFactory)
+    {
+        if (condition)
+            throw new AppException(errorFactory());
+    }
+
+    public static void All(params (bool Condition, Func<Error> ErrorFactory)[] validations)
+    {
+        foreach (var (condition, error) in validations)
+        {
+            if (!condition)
+                throw new AppException(error());
+        }
     }
 }

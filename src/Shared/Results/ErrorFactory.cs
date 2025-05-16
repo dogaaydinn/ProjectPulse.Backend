@@ -1,42 +1,88 @@
 using Shared.Constants;
-using Shared.Results.Errors;
 
 namespace Shared.Results;
 
 public static class ErrorFactory
 {
-    public static Error Validation(string code, string message) =>
-        new(code, message);
+    private static ErrorBuilder Create(string code) => new(code);
 
-    public static Error Required(string fieldName) =>
-        new(ErrorCodes.Validation, $"{fieldName} is required.");
+    public static Error Required(string field) =>
+        Create(ErrorCodes.Validation)
+            .WithMessage($"{field} is required.")
+            .WithMetadata("Field", field)
+            .Build();
 
-    public static Error InvalidFormat(string fieldName) =>
-        new(ErrorCodes.Validation, $"{fieldName} has an invalid format.");
+    public static Error InvalidFormat(string field) =>
+        Create(ErrorCodes.Validation)
+            .WithMessage($"{field} has an invalid format.")
+            .WithMetadata("Field", field)
+            .Build();
 
-    public static Error OutOfRange(string fieldName, string range) =>
-        new(ErrorCodes.Validation, $"{fieldName} must be within {range}.");
-
-    public static Error EnumRequired(string field) =>
-        new(ErrorCodes.Validation, EnumErrors.Required(field));
+    public static Error OutOfRange(string field, string range) =>
+        Create(ErrorCodes.Validation)
+            .WithMessage($"{field} must be within {range}.")
+            .WithMetadata("Field", field)
+            .WithMetadata("Range", range)
+            .Build();
 
     public static Error EnumInvalid(string field, IEnumerable<string> validOptions) =>
-        new(ErrorCodes.Validation, EnumErrors.Invalid(field, validOptions));
+        Create(ErrorCodes.Validation)
+            .WithMessage($"Invalid {field} value. Must be one of: {string.Join(", ", validOptions)}")
+            .WithMetadata("Field", field)
+            .WithMetadata("ValidOptions", validOptions)
+            .Build();
 
-    public static Error EnumInvalidValue(string field, IEnumerable<int> validValues) =>
-        new(ErrorCodes.Validation, 
-            $"Invalid {field} value. Must be one of: {string.Join(", ", validValues)}");
+    public static Error Unexpected(string message, Exception? ex = null)
+    {
+        var error = Create(ErrorCodes.Unexpected)
+            .WithMessage(message);
 
-    public static Error EnumOutOfRange(string field, int min, int max) =>
-        new(ErrorCodes.Validation, 
-            $"{field} must be between {min} and {max} (inclusive).");
-    
-    public static Error Unexpected(string message) =>
-        new(ErrorCodes.Unexpected, message);
+        if (ex != null)
+        {
+            error.WithMetadata("ExceptionType", ex.GetType().Name);
+        }
+
+        return error.Build();
+    }
+
+    public static Error NotFound(string entity, object id) =>
+        Create(ErrorCodes.NotFound)
+            .WithMessage($"{entity} with ID '{id}' was not found.")
+            .WithMetadata("Entity", entity)
+            .WithMetadata("Id", id)
+            .Build();
 
     public static Error Custom(string code, string message) =>
-        new(code, message);
+        Create(code)
+            .WithMessage(message)
+            .Build();
+}
 
-    public static Error NotFound(string entityName, Guid id) =>
-        new(ErrorCodes.NotFound, $"{entityName} with ID '{id}' was not found.");
+public sealed class ErrorBuilder(string code)
+{
+    private string _message = string.Empty;
+    private readonly Dictionary<string, object> _metadata = new();
+
+    public ErrorBuilder WithMessage(string message)
+    {
+        _message = message;
+        return this;
+    }
+
+    public ErrorBuilder WithMetadata(string key, object value)
+    {
+        _metadata[key] = value;
+        return this;
+    }
+
+    public Error Build()
+    {
+        var error = new Error(code, _message);
+        foreach (var kv in _metadata)
+        {
+            error.WithMetadata(kv.Key, kv.Value);
+        }
+        return error;
+    }
+    
 }

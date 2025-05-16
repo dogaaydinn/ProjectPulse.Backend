@@ -6,6 +6,9 @@ public static class ErrorCodes
     public const string Validation = "Error.Validation";
     public const string Unexpected = "Error.Unexpected";
     public const string Schedule = "Error.Schedule";
+    public const string Conflict = "Error.Conflict";
+    public const string NullValue = "Error.NullValue";
+    
     
     public static class User
     {

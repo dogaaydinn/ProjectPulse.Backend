@@ -1,24 +1,26 @@
 using System.Text.RegularExpressions;
-using Shared.Exceptions;
+using Shared.Results;
 
 namespace Shared.ValueObjects;
 
 public sealed partial class Email : ValueObject
 {
     public string Value { get; }
+    public string Domain => Value.Split('@')[1];
 
     private Email(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw new AppException("Validation.Email.Empty", "Email address cannot be empty.");
-
-        if (!MyRegex().IsMatch(value))
-            throw new AppException("Validation.Email.Invalid", "Email address is invalid.");
-
         Value = value;
     }
 
-    public static Email Create(string value) => new(value);
+    public static Result<Email> Create(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return Result<Email>.Failure(Error.Validation("Email cannot be empty"));
+
+        return !EmailRegex().IsMatch(value) ? Result<Email>.Failure(Error.Validation("Invalid email format")) : Result<Email>.Success(new Email(value));
+    }
+
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {
@@ -26,6 +28,7 @@ public sealed partial class Email : ValueObject
     }
 
     public override string ToString() => Value;
+
     [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")]
-    private static partial Regex MyRegex();
+    private static partial Regex EmailRegex();
 }

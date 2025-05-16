@@ -1,4 +1,9 @@
 namespace Shared.Exceptions;
 
-public class NotFoundException(string resource, object key)
-    : AppException($"{resource} with key '{key}' was not found.", "Error.NotFound");
+public class NotFoundException : AppException
+{
+    public NotFoundException(string resource, object key)
+        : base("Error.NotFound", $"{resource} with key '{key}' was not found.")
+    {
+    }
+}

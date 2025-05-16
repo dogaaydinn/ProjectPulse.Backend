@@ -1,9 +1,21 @@
-using Shared.Constants;
 using Shared.Results;
 
 namespace Shared.Exceptions;
 
-public abstract class ValidationException(List<Error> errors) : AppException("Validation failed.", ErrorCodes.Validation)
+public class ValidationException : AppException
 {
-    public List<Error> Errors { get; } = errors;
+    private IReadOnlyCollection<Error> Errors { get; }
+
+    public ValidationException(IEnumerable<Error> errors)
+        : base("Error.Validation", "One or more validation errors occurred.")
+    {
+        Errors = errors.ToList().AsReadOnly();
+        this.WithMetadata("ErrorCount", Errors.Count);
+    }
+
+    private new ValidationException WithMetadata(string key, object value)
+    {
+        base.WithMetadata(key, value);
+        return this;
+    }
 }

@@ -1,19 +1,23 @@
-namespace Shared.Results;
+using Shared.Primitives;
+using Shared.Results;
 
-public class Result : IResult
+public readonly struct Result : IResult
 {
-    public bool IsSuccess { get; }
-    public bool IsFailure => !IsSuccess;
-    public List<Error> Errors { get; }
-    public Error? Error => Errors.FirstOrDefault();
+    private readonly Result<Unit> _internal;
 
-    protected Result(bool isSuccess, List<Error>? errors = null)
-    {
-        IsSuccess = isSuccess;
-        Errors = errors ?? [];
-    }
+    public bool IsSuccess => _internal.IsSuccess;
+    public bool IsFailure => _internal.IsFailure;
+    public Unit Value => _internal.Value;
+    public IReadOnlyCollection<Error> Errors => _internal.Errors;
+    public Error FirstError => _internal.FirstError;
 
-    public static Result Success() => new(true);
-    public static Result Failure(Error error) => new(false, [error]);
-    public static Result Failure(List<Error> errors) => new(false, errors);
+    private Result(Result<Unit> internalResult) => _internal = internalResult;
+
+    public static Result Success() => new(Result<Unit>.Success(Unit.Value));
+    public static Result Failure(Error error) => new(Result<Unit>.Failure(error));
+    public static Result Failure(IEnumerable<Error> errors) => new(Result<Unit>.Failure(errors));
+
+    public IResult<TResult> Map<TResult>(Func<Unit, TResult> mapper) => _internal.Map(mapper);
+    public IResult<Unit> Tap(Action<Unit> action) => _internal.Tap(action);
+    public IResult<Unit> OnFailure(Action<IReadOnlyCollection<Error>> handler) => _internal.OnFailure(handler);
 }
