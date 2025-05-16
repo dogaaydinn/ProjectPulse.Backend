@@ -9,26 +9,20 @@ public static class LocalizedStringMapper
     {
         ArgumentNullException.ThrowIfNull(dto);
 
-        var translations = new Dictionary<string, string>();
+        var translations = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        if (!string.IsNullOrWhiteSpace(dto.En))
-            translations["en"] = dto.En;
+        if (!string.IsNullOrWhiteSpace(dto.En)) translations["en-US"] = dto.En;
+        if (!string.IsNullOrWhiteSpace(dto.Tr)) translations["tr-TR"] = dto.Tr;
 
-        if (!string.IsNullOrWhiteSpace(dto.Tr))
-            translations["tr"] = dto.Tr;
-
-        if (translations.Count == 0)
-            throw new ArgumentException("LocalizedStringDto must contain at least one translation.");
-
-        return LocalizedString.Create(translations);
+        return LocalizedString.Create(translations).Value;
     }
 
     public static LocalizedStringDto ToDto(LocalizedString localized)
     {
         ArgumentNullException.ThrowIfNull(localized);
 
-        localized.Translations.TryGetValue("en", out var en);
-        localized.Translations.TryGetValue("tr", out var tr);
+        localized.Translations.TryGetValue("en-US", out var en);
+        localized.Translations.TryGetValue("tr-TR", out var tr);
 
         return new LocalizedStringDto
         {

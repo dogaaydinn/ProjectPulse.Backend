@@ -47,3 +47,45 @@ public static class ValidationResultExtensions
     }
 
 }
+/*
+// Shared/Validation/ValidationResultExtensions.cs
+   using Shared.Exceptions;
+   using Shared.Results;
+   
+   namespace Shared.Validation;
+   
+   public static class ValidationResultExtensions
+   {
+       public static Result<T> ToResult<T>(this IEnumerable<Error> errors)
+       {
+           var errorList = errors?.Where(e => e is not null).ToList() ?? new();
+   
+           return errorList.Count == 0
+               ? Result<T>.Failure(ErrorFactory.Unexpected("Validation result is empty but marked as invalid."))
+               : Result<T>.Failure(errorList);
+       }
+   
+       public static Result ToResult(this IEnumerable<Error> errors)
+       {
+           var errorList = errors?.Where(e => e is not null).ToList() ?? new();
+   
+           return errorList.Count == 0
+               ? Result.Failure(ErrorFactory.Unexpected("Validation result is empty but marked as invalid."))
+               : Result.Failure(errorList);
+       }
+   
+       public static void ThrowIfInvalid(this IEnumerable<Error> errors)
+       {
+           var errorList = errors?.Where(e => e is not null).ToList() ?? new();
+           if (errorList.Count > 0)
+               throw new ValidationException(errorList);
+       }
+   
+       // Domain-specific extension
+       public static IEnumerable<Error> IfEndBeforeStart(this DateTime start, DateTime? end, Func<Error> errorFactory)
+       {
+           if (end.HasValue && end.Value < start)
+               yield return errorFactory();
+       }
+   }
+   */

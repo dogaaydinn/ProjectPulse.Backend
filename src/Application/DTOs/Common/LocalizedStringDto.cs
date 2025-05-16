@@ -8,21 +8,19 @@ public class LocalizedStringDto
     public string? Tr { get; init; }
 
     public Dictionary<string, string> Translations =>
-        new()
+        new(StringComparer.OrdinalIgnoreCase)
         {
-            ["en"] = En ?? string.Empty,
-            ["tr"] = Tr ?? string.Empty
+            ["en-US"] = En ?? string.Empty,
+            ["tr-TR"] = Tr ?? string.Empty
         };
+
     public LocalizedString ToValueObject()
     {
-        var translations = new Dictionary<string, string>();
+        var dictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        if (!string.IsNullOrWhiteSpace(En)) translations["en"] = En;
-        if (!string.IsNullOrWhiteSpace(Tr)) translations["tr"] = Tr;
+        if (!string.IsNullOrWhiteSpace(En)) dictionary["en-US"] = En;
+        if (!string.IsNullOrWhiteSpace(Tr)) dictionary["tr-TR"] = Tr;
 
-        if (translations.Count == 0)
-            throw new ArgumentException("LocalizedStringDto must contain at least one translation.");
-
-        return LocalizedString.Create(translations);
+        return LocalizedString.Create(dictionary).Value;
     }
 }
