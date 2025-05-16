@@ -12,25 +12,22 @@ public class JwtTokenGenerator(IOptions<JwtOptions> options) : ITokenGenerator
 {
     private readonly JwtOptions _options = options.Value;
 
-    public string GenerateAccessToken(Guid userId, string username, string role)
+    public string GenerateAccessToken(Guid userId, string username, IEnumerable<string> roles)
     {
-        var claims = new[]
+        var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, username),
-            new Claim(ClaimTypes.Role, role)
+            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new(JwtRegisteredClaimNames.UniqueName, username)
         };
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
+        var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
-            _options.Issuer,
-            _options.Audience,
-            claims,
-            expires: DateTime.UtcNow.AddMinutes(_options.AccessTokenExpirationMinutes),
-            signingCredentials: creds
-        );
+            issuer: _options.Issuer,
+            audience: _options.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes),
+            signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
