@@ -12,4 +12,5 @@ public interface ITokenGenerator
 public record TokenResult(
     string Token,
     DateTime Expiration,
-    IEnumerable<string> Roles);
+    IEnumerable<string> Roles
+);
