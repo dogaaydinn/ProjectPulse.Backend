@@ -1,5 +1,5 @@
-using Shared.Results;
 using Shared.Exceptions;
+using Shared.Results;
 using Shared.ValueObjects;
 
 namespace Shared.Validation;
