@@ -1,10 +1,14 @@
+// Shared/Base/IAggregateRoot.cs
+using System.Collections.Generic;
 using Shared.Events;
 
-namespace Shared.Base;
-
-public interface IAggregateRoot<out TId> : IEntity<TId>
+namespace Shared.Base
 {
-    IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
-    void ClearDomainEvents();
-    long Version { get; }
+    public interface IAggregateRoot<TId> : IEntity<TId>
+        where TId : notnull
+    {
+        IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
+        long DomainVersion { get; }
+        void ClearDomainEvents();
+    }
 }

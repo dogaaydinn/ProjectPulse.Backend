@@ -1,7 +1,7 @@
 namespace Shared.Base;
 
-public interface IEntity<out TId>
+public interface IEntity<TId>
 {
     TId Id { get; }
-    int Version { get; }
+    long Version { get; }
 }
