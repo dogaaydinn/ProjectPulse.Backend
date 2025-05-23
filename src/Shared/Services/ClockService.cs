@@ -2,7 +2,7 @@ using Shared.Time;
 
 namespace Shared.Services;
 
-public class ClockService
+public class ClockService : IClockService
 {
     private readonly IClock _clock;
 
@@ -16,7 +16,6 @@ public class ClockService
     public DateOnly Today => _clock.Today;
 
     public bool IsWeekend() => _clock.Today.DayOfWeek is DayOfWeek.Saturday or DayOfWeek.Sunday;
-
     public bool IsBeforeNow(DateTime dt) => dt < _clock.UtcNow;
     public bool IsAfterNow(DateTime dt) => dt > _clock.UtcNow;
 

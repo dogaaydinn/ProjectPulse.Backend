@@ -10,5 +10,3 @@ public interface ICurrentUserService
     
     event EventHandler<UserChangedEventArgs>? UserChanged;
 }
-
-public record UserChangedEventArgs(Guid? OldUserId, Guid? NewUserId);
