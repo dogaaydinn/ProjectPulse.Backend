@@ -1,88 +1,77 @@
+using System.Diagnostics;
+using Shared.Abstractions.Localization;
 using Shared.Constants;
 
 namespace Shared.Results;
 
-public static class ErrorFactory
+public class ErrorFactory : IErrorFactory
 {
-    private static ErrorBuilder Create(string code) => new(code);
+    private readonly IErrorRegistry _errorRegistry;
+    private readonly IErrorLocalizer? _localizer;
 
-    public static Error Required(string field) =>
-        Create(ErrorCodes.Validation)
-            .WithMessage($"{field} is required.")
-            .WithMetadata("Field", field)
-            .Build();
-
-    public static Error InvalidFormat(string field) =>
-        Create(ErrorCodes.Validation)
-            .WithMessage($"{field} has an invalid format.")
-            .WithMetadata("Field", field)
-            .Build();
-
-    public static Error OutOfRange(string field, string range) =>
-        Create(ErrorCodes.Validation)
-            .WithMessage($"{field} must be within {range}.")
-            .WithMetadata("Field", field)
-            .WithMetadata("Range", range)
-            .Build();
-
-    public static Error EnumInvalid(string field, IEnumerable<string> validOptions) =>
-        Create(ErrorCodes.Validation)
-            .WithMessage($"Invalid {field} value. Must be one of: {string.Join(", ", validOptions)}")
-            .WithMetadata("Field", field)
-            .WithMetadata("ValidOptions", validOptions)
-            .Build();
-
-    public static Error Unexpected(string message, Exception? ex = null)
+    public ErrorFactory(IErrorRegistry errorRegistry, IErrorLocalizer? localizer = null)
     {
-        var error = Create(ErrorCodes.Unexpected)
-            .WithMessage(message);
+        _errorRegistry = errorRegistry;
+        _localizer = localizer;
+    }
 
-        if (ex != null)
+    public Error Create(
+        string code,
+        object[]? args = null,
+        Dictionary<string, object>? metadata = null,
+        ErrorSeverity? severity = null,
+        ErrorCategory? category = null)
+    {
+        var definition = _errorRegistry.Get(code);
+
+        if (definition.IsDeprecated)
         {
-            error.WithMetadata("ExceptionType", ex.GetType().Name);
+            Debug.WriteLine($"[WARNING] Deprecated error used: {code}. {definition.DeprecationMessage}");
         }
 
-        return error.Build();
+        var messageTemplate = _localizer?.GetMessage(code, args ?? []) ?? definition.MessageTemplate;
+
+        return new Error(
+            code: code,
+            messageTemplate: messageTemplate,
+            args: args,
+            metadata: metadata,
+            severity: severity ?? definition.Severity,
+            category: category ?? definition.Category
+        );
     }
 
-    public static Error NotFound(string entity, object id) =>
-        Create(ErrorCodes.NotFound)
-            .WithMessage($"{entity} with ID '{id}' was not found.")
-            .WithMetadata("Entity", entity)
-            .WithMetadata("Id", id)
-            .Build();
+    public Error Unexpected(string message) =>
+        Create(
+            code: ErrorCodes.General.Unexpected,
+            args: new[] { message },
+            metadata: new() { ["Exception"] = message },
+            severity: ErrorSeverity.Critical,
+            category: ErrorCategory.Unexpected
+        );
 
-    public static Error Custom(string code, string message) =>
-        Create(code)
-            .WithMessage(message)
-            .Build();
-}
+    public Error Conflict(string message, object? context = null) =>
+        Create(
+            code: ErrorCodes.General.Conflict,
+            args: new[] { message },
+            metadata: new() { ["Context"] = context ?? "Unknown" },
+            severity: ErrorSeverity.Warning,
+            category: ErrorCategory.Conflict
+        );
 
-public sealed class ErrorBuilder(string code)
-{
-    private string _message = string.Empty;
-    private readonly Dictionary<string, object> _metadata = new();
+    public Error Validation(string field, string rule, object? invalidValue) =>
+        Create(
+            code: $"Validation.{field}.{rule}",
+            args: new object[] { field, invalidValue ?? "null" },
+            metadata: new() { ["Field"] = field, ["InvalidValue"] = invalidValue ?? "null", ["Rule"] = rule },
+            category: ErrorCategory.Validation
+        );
 
-    public ErrorBuilder WithMessage(string message)
-    {
-        _message = message;
-        return this;
-    }
-
-    public ErrorBuilder WithMetadata(string key, object value)
-    {
-        _metadata[key] = value;
-        return this;
-    }
-
-    public Error Build()
-    {
-        var error = new Error(code, _message);
-        foreach (var kv in _metadata)
-        {
-            error.WithMetadata(kv.Key, kv.Value);
-        }
-        return error;
-    }
-    
+    public Error NotFound(string entity, object id) =>
+        Create(
+            code: $"{entity}.NotFound",
+            args: new object[] { id },
+            metadata: new() { ["Entity"] = entity, ["Id"] = id },
+            category: ErrorCategory.NotFound
+        );
 }
