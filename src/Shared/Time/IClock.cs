@@ -6,7 +6,6 @@ public interface IClock
     DateTimeOffset UtcNowOffset { get; }
     DateOnly Today => DateOnly.FromDateTime(UtcNow);
     TimeProvider Provider { get; }
-
     void Advance(TimeSpan duration);
     void SetTime(DateTime newTime);
 }

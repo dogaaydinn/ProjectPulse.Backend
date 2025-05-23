@@ -13,13 +13,18 @@ public sealed class TestClock : IClock
     public DateTimeOffset UtcNowOffset => new(_utcNow);
     public TimeProvider Provider => new TestTimeProvider(_utcNow);
 
-    public void Advance(TimeSpan duration) => _utcNow += duration;
-    public void SetTime(DateTime newTime) => _utcNow = newTime;
+    public void Advance(TimeSpan duration) =>
+        _utcNow = _utcNow.Add(duration);
 
-    private class TestTimeProvider(DateTime initialTime) : TimeProvider
+    public void SetTime(DateTime newTime) =>
+        _utcNow = newTime;
+
+    private class TestTimeProvider : TimeProvider
     {
-        public override DateTimeOffset GetUtcNow() => initialTime;
-        public override long GetTimestamp() => initialTime.Ticks;
+        private readonly DateTime _time;
+        public TestTimeProvider(DateTime time) => _time = time;
+        public override DateTimeOffset GetUtcNow() => _time;
+        public override long GetTimestamp() => _time.Ticks;
         public override TimeZoneInfo LocalTimeZone => TimeZoneInfo.Utc;
     }
 }
