@@ -1,40 +1,68 @@
+using System.Collections.Concurrent;
 using System.Globalization;
 
 namespace Shared.Globalization;
 
 public static class CultureExtensions
 {
+    private static readonly ConcurrentDictionary<string, CultureInfo?> _cache 
+        = new(StringComparer.OrdinalIgnoreCase);
+
     public static IEnumerable<CultureInfo> GetFallbackCultures(this CultureInfo culture)
     {
-        while (!culture.Equals(CultureInfo.InvariantCulture))
+        while (true)
         {
-            culture = culture.Parent;
-            yield return culture;
+            var parent = culture.Parent;
+            yield return parent;
+            if (parent.Equals(CultureInfo.InvariantCulture))
+                yield break;
+            culture = parent;
         }
     }
 
     public static bool IsSupportedCulture(string cultureCode)
     {
-        try
-        {
-            _ = CultureInfo.GetCultureInfo(cultureCode);
-            return true;
-        }
-        catch (CultureNotFoundException)
-        {
-            return false;
-        }
+        return TryNormalizeCulture(cultureCode, out _);
     }
 
     public static CultureInfo NormalizeCulture(string cultureCode)
     {
+        if (!TryNormalizeCulture(cultureCode, out var culture))
+            throw new ArgumentException($"Invalid culture code: '{cultureCode}'", nameof(cultureCode));
+        return culture;
+    }
+
+    private static bool TryNormalizeCulture(string cultureCode, out CultureInfo culture)
+    {
+        if (string.IsNullOrWhiteSpace(cultureCode))
+        {
+            culture = CultureInfo.InvariantCulture;
+            return false;
+        }
+
+        if (_cache.TryGetValue(cultureCode, out var cached))
+        {
+            if (cached is null)
+            {
+                culture = CultureInfo.InvariantCulture;
+                return false;
+            }
+            culture = cached;
+            return true;
+        }
+
         try
         {
-            return CultureInfo.GetCultureInfo(cultureCode);
+            var info = CultureInfo.GetCultureInfo(cultureCode);
+            _cache[cultureCode] = info;
+            culture = info;
+            return true;
         }
-        catch (CultureNotFoundException ex)
+        catch (CultureNotFoundException)
         {
-            throw new ArgumentException($"Invalid culture code: '{cultureCode}'", ex);
+            _cache[cultureCode] = null;
+            culture = CultureInfo.InvariantCulture;
+            return false;
         }
     }
 }
