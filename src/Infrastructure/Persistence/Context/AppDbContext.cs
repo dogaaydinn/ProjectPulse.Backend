@@ -2,7 +2,10 @@ using Domain.Modules.Projects.Entities;
 using Domain.Modules.Tasks.Entities;
 using Domain.Modules.Teams.Entities;
 using Domain.Modules.Users.Entities;
+using Infrastructure.Messaging.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Shared.Messaging.Contracts;
+using OutboxMessage = Infrastructure.Messaging.Contracts.OutboxMessage;
 
 namespace Infrastructure.Persistence.Context;
 
@@ -25,6 +28,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Status> Statuses => Set<Status>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<TeamProject> TeamProjects => Set<TeamProject>();
+    public DbSet<DeadLetterMessage> DeadLetterMessages { get; set; }
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
