@@ -1,5 +1,4 @@
-using Shared.Exceptions;
-using Shared.Results.Errors;
+using Shared.Results;
 
 namespace Shared.ValueObjects;
 
@@ -10,18 +9,30 @@ public sealed class DateRange : ValueObject
 
     private DateRange(DateTime start, DateTime? end)
     {
-        if (end < start)
-            throw new AppException(
-                ProjectErrors.InvalidSchedule(start, end)
-            );
-
-
         Start = start;
         End = end;
     }
 
-    public static DateRange Create(DateTime start, DateTime? end)
-        => new(start, end);
+    public static Result<DateRange> Create(
+        DateTime start,
+        DateTime? end,
+        IErrorFactory errors)
+    {
+        if (!end.HasValue || !(end < start)) return Result<DateRange>.Success(new DateRange(start, end), errors);
+        var err = errors.Create(
+            code: "DateRange.Invalid",                
+            args: new object[] { start, end },
+            metadata: new Dictionary<string, object>
+            {
+                ["Start"] = start,
+                ["End"]   = end
+            },
+            severity: ErrorSeverity.Validation,     
+            category: ErrorCategory.Validation);   
+
+        return Result<DateRange>.Failure(err, errors);
+
+    }
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {

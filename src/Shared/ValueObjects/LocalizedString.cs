@@ -1,15 +1,13 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
-using Shared.Exceptions;
-using Shared.Globalization;
 using Shared.Results;
+using Shared.Globalization;
 
 namespace Shared.ValueObjects;
 
 public sealed class LocalizedString : ValueObject
 {
     private const string DefaultCulture = "en-US";
-
     public IReadOnlyDictionary<string, string> Translations { get; }
 
     private LocalizedString(Dictionary<string, string> translations)
@@ -17,45 +15,47 @@ public sealed class LocalizedString : ValueObject
         Translations = new ReadOnlyDictionary<string, string>(translations);
     }
 
-    public static Result<LocalizedString> Create(Dictionary<string, string> translations)
+    public static Result<LocalizedString> Create(
+        IDictionary<string, string?> translations,
+        IErrorFactory errors)
     {
         if (translations is null || translations.Count == 0)
-            return Result.Failure<LocalizedString>(ErrorFactory.LocalizedString.Required());
+            return Result<LocalizedString>.Failure(
+                errors.Validation("translations", "Required", null),
+                errors);
 
         var normalized = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var (culture, value) in translations)
+        foreach (var (culture, text) in translations)
         {
-            if (string.IsNullOrWhiteSpace(value))
+            if (string.IsNullOrWhiteSpace(text))
                 continue;
 
             if (!CultureExtensions.IsSupportedCulture(culture))
-                return Result.Failure<LocalizedString>(ErrorFactory.LocalizedString.InvalidCulture(culture));
+                return Result<LocalizedString>.Failure(
+                    errors.Validation("translations", "InvalidCulture", culture),
+                    errors);
 
-            normalized[CultureInfo.GetCultureInfo(culture).Name] = value.Trim();
+            var name = CultureInfo.GetCultureInfo(culture).Name;
+            normalized[name] = text.Trim();
         }
 
         if (normalized.Count == 0)
-            return Result.Failure<LocalizedString>(ErrorFactory.LocalizedString.NoValidTranslations());
+            return Result<LocalizedString>.Failure(
+                errors.Validation("translations", "NoValidTranslations", null),
+                errors);
 
-        return Result.Success(new LocalizedString(normalized));
+        return Result<LocalizedString>.Success(
+            new LocalizedString(normalized),
+            errors);
     }
 
-    public string GetValue(CultureInfo culture)
+    private string GetValue(CultureInfo culture)
     {
-        if (Translations.TryGetValue(culture.Name, out var value))
-            return value;
+        if (Translations.TryGetValue(culture.Name, out var v) || culture.GetFallbackCultures().Any(fallback => Translations.TryGetValue(fallback.Name, out v)) || Translations.TryGetValue(DefaultCulture, out v))
+            return v;
 
-        foreach (var fallback in culture.GetFallbackCultures())
-        {
-            if (Translations.TryGetValue(fallback.Name, out value))
-                return value;
-        }
-
-        if (Translations.TryGetValue(DefaultCulture, out value))
-            return value;
-
-        throw new LocalizationException(culture.Name);
+        throw new InvalidOperationException($"No translation for {culture.Name}");
     }
 
     public string this[string culture] => GetValue(CultureInfo.GetCultureInfo(culture));
@@ -69,7 +69,7 @@ public sealed class LocalizedString : ValueObject
     public Dictionary<string, string> ToDictionary() =>
         new(Translations, StringComparer.OrdinalIgnoreCase);
 
-    protected override IEnumerable<object> GetEqualityComponents()
+    protected override IEnumerable<object?> GetEqualityComponents()
     {
         foreach (var pair in Translations.OrderBy(x => x.Key))
         {
@@ -77,4 +77,7 @@ public sealed class LocalizedString : ValueObject
             yield return pair.Value;
         }
     }
+
+    public override string ToString() =>
+        GetValue(CultureInfo.CurrentCulture);
 }

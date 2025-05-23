@@ -13,14 +13,27 @@ public sealed partial class Email : ValueObject
         Value = value;
     }
 
-    public static Result<Email> Create(string value)
+    public static Result<Email> Create(string value, IErrorFactory errors)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return Result<Email>.Failure(Error.Validation("Email cannot be empty"));
+        {
+            var err = errors.Validation(
+                field: "Email",
+                rule: "Required",
+                invalidValue: value);
+            return Result<Email>.Failure(err, errors);
+        }
 
-        return !EmailRegex().IsMatch(value) ? Result<Email>.Failure(Error.Validation("Invalid email format")) : Result<Email>.Success(new Email(value));
+        if (EmailRegex().IsMatch(value)) return Result<Email>.Success(new Email(value), errors);
+        {
+            var err = errors.Validation(
+                field: "Email",
+                rule: "InvalidFormat",
+                invalidValue: value);
+            return Result<Email>.Failure(err, errors);
+        }
+
     }
-
 
     protected override IEnumerable<object?> GetEqualityComponents()
     {
