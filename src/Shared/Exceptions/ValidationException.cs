@@ -4,18 +4,12 @@ namespace Shared.Exceptions;
 
 public class ValidationException : AppException
 {
-    private IReadOnlyCollection<Error> Errors { get; }
+    public IReadOnlyCollection<Error> Errors { get; }
 
     public ValidationException(IEnumerable<Error> errors)
-        : base("Error.Validation", "One or more validation errors occurred.")
+        : base("VALIDATION_FAILED", "One or more validation errors occurred.")
     {
-        Errors = errors.ToList().AsReadOnly();
-        this.WithMetadata("ErrorCount", Errors.Count);
-    }
-
-    private new ValidationException WithMetadata(string key, object value)
-    {
-        base.WithMetadata(key, value);
-        return this;
+        var list = errors.ToList();
+        Errors = list.AsReadOnly();
     }
 }

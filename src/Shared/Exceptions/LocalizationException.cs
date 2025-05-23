@@ -1,11 +1,14 @@
 using Shared.Results;
+using Shared.Results.Errors.ValueObjects;
 
 namespace Shared.Exceptions;
 
 public class LocalizationException : AppException
 {
-    public LocalizationException(string cultureCode)
-        : base(ErrorFactory.LocalizedString.MissingCulture(cultureCode))
+    public LocalizationException(
+        IErrorFactory errors,
+        string cultureCode)
+        : base(errors.MissingCulture(cultureCode))
     {
     }
 }
