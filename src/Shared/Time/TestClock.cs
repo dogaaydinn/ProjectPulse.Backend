@@ -11,6 +11,7 @@ public sealed class TestClock : IClock
 
     public DateTime UtcNow => _utcNow;
     public DateTimeOffset UtcNowOffset => new(_utcNow);
+    public DateOnly Today => DateOnly.FromDateTime(UtcNow); 
     public TimeProvider Provider => new TestTimeProvider(_utcNow);
 
     public void Advance(TimeSpan duration) =>

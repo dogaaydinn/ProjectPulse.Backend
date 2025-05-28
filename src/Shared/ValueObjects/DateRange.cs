@@ -21,7 +21,7 @@ public sealed class DateRange : ValueObject
         if (!end.HasValue || !(end < start)) return Result<DateRange>.Success(new DateRange(start, end), errors);
         var err = errors.Create(
             code: "DateRange.Invalid",                
-            args: new object[] { start, end },
+            args: [start, end],
             metadata: new Dictionary<string, object>
             {
                 ["Start"] = start,

@@ -13,4 +13,6 @@ public interface IErrorFactory
     Error Validation(string field, string rule, object? invalidValue);
     Error Conflict(string message, object? context = null);
     Error Unexpected(string message);
+    Error Required(string fieldName);
+    Error Invalid(string fieldName, IEnumerable<string> validValues);
 }

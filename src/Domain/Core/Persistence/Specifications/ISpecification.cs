@@ -1,4 +1,3 @@
-// ProjectPulse.Domain/Core/Persistence/Specifications/ISpecification.cs
 using System.Linq.Expressions;
 
 namespace Domain.Core.Persistence.Specifications;
@@ -19,4 +18,5 @@ public interface ISpecification<T>
     bool AsNoTrackingWithIdentityResolution { get; }
     bool EnableCache { get; }
     string CacheKey { get; }
+    Func<IQueryable<T>, IQueryable<T>>? PostProcessingAction { get; }
 }

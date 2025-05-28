@@ -10,8 +10,8 @@ public static class ErrorListExtensions
         this IEnumerable<Error> errors,
         IErrorFactory factory)
     {
-        var list = errors?.Where(e => e is not null).ToList() 
-                   ?? new List<Error>();
+        var list = errors?.Where(e => true).ToList() 
+                   ?? [];
 
         if (list.Count > 0)
             return Result<T>.Failure(list, factory);
@@ -25,8 +25,8 @@ public static class ErrorListExtensions
         this IEnumerable<Error> errors,
         IErrorFactory factory)
     {
-        var list = errors?.Where(e => e is not null).ToList() 
-                   ?? new List<Error>();
+        var list = errors?.Where(e => true).ToList() 
+                   ?? [];
 
         if (list.Count > 0)
             return Result.Failure(list, factory);
@@ -38,8 +38,8 @@ public static class ErrorListExtensions
 
     public static void ThrowIfInvalid(this IEnumerable<Error> errors)
     {
-        var list = errors?.Where(e => e is not null).ToList() 
-                   ?? new List<Error>();
+        var list = errors?.Where(e => true).ToList() 
+                   ?? [];
 
         if (list.Count > 0)
             throw new ValidationException(list);

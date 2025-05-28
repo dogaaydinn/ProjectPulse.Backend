@@ -9,6 +9,7 @@ public sealed class FrozenClock : IClock
 
     public DateTime UtcNow => _frozenTime;
     public DateTimeOffset UtcNowOffset => new(_frozenTime);
+    public DateOnly Today => DateOnly.FromDateTime(UtcNow); 
     public TimeProvider Provider => new FrozenTimeProvider(_frozenTime);
 
     public void Advance(TimeSpan _) =>

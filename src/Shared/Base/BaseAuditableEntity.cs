@@ -2,7 +2,7 @@ using Shared.Time;
 
 namespace Shared.Base;
 
-public abstract class AuditableEntity<TId> : Entity<TId>, IAuditableEntity<TId>
+public abstract class BaseAuditableEntity<TId> : BaseEntity<TId>, IAuditableEntity<TId>
     where TId : notnull
 {
     public DateTime CreatedDate   { get; private set; }
@@ -13,9 +13,9 @@ public abstract class AuditableEntity<TId> : Entity<TId>, IAuditableEntity<TId>
     public DateTime? DeletedDate  { get; private set; }
     public Guid?    DeletedBy     { get; private set; }
 
-    protected AuditableEntity(TId id) : base(id) { }
-    // Entity sınıfı parametresiz constructor'a sahip değil, bu yüzden default bir ID sağlamamız gerekiyor
-    protected AuditableEntity() : base(default!) { }
+    protected BaseAuditableEntity(TId id) : base(id) { }
+
+    protected BaseAuditableEntity() : base(default!) { }
 
     public void TrackCreation(Guid userId, IClock clock)
     {

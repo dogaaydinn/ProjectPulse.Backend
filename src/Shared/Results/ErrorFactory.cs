@@ -70,8 +70,23 @@ public class ErrorFactory : IErrorFactory
     public Error NotFound(string entity, object id) =>
         Create(
             code: $"{entity}.NotFound",
-            args: new object[] { id },
+            args: [id],
             metadata: new() { ["Entity"] = entity, ["Id"] = id },
             category: ErrorCategory.NotFound
+        );
+    public Error Required(string fieldName) =>
+        Create(
+            code: $"Validation.{fieldName}.Required",
+            args: new object[] { fieldName },
+            metadata: new() { ["Field"] = fieldName },
+            category: ErrorCategory.Validation
+        );
+
+    public Error Invalid(string fieldName, IEnumerable<string> validValues) =>
+        Create(
+            code: $"Validation.{fieldName}.Invalid",
+            args: new object[] { fieldName, string.Join(", ", validValues) },
+            metadata: new() { ["Field"] = fieldName, ["ValidValues"] = validValues },
+            category: ErrorCategory.Validation
         );
 }

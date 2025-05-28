@@ -16,7 +16,7 @@ public sealed class LocalizedString : ValueObject
     }
 
     public static Result<LocalizedString> Create(
-        IDictionary<string, string?> translations,
+        IDictionary<string, string?>? translations,
         IErrorFactory errors)
     {
         if (translations is null || translations.Count == 0)
@@ -53,7 +53,7 @@ public sealed class LocalizedString : ValueObject
     private string GetValue(CultureInfo culture)
     {
         if (Translations.TryGetValue(culture.Name, out var v) || culture.GetFallbackCultures().Any(fallback => Translations.TryGetValue(fallback.Name, out v)) || Translations.TryGetValue(DefaultCulture, out v))
-            return v;
+            return v ?? throw new InvalidOperationException();
 
         throw new InvalidOperationException($"No translation for {culture.Name}");
     }
